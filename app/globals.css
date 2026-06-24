@@ -636,6 +636,396 @@ a.foot-link-subtle:hover {
   display: block;
 }
 
+/* ===================================================================== */
+/* Descriptive one-pager (home) — `.lp-*`                                  */
+/* ===================================================================== */
+
+.lp {
+  display: block;
+  min-height: 100vh;
+}
+
+.lp-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 18px clamp(20px, 5vw, 56px);
+  background: rgba(20, 38, 31, 0.72);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(74, 122, 98, 0.16);
+}
+
+.lp-topbar .mini-logo {
+  opacity: 1;
+  animation: none;
+}
+
+.lp-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(16px, 2.4vw, 30px);
+}
+
+.lp-nav-link {
+  font-family: var(--font-dm-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--cream-dark);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.lp-nav-link:hover {
+  color: var(--cream);
+}
+
+.lp-nav-cta {
+  font-family: var(--font-dm-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--tan);
+  border: 1px solid #c4a97244;
+  background: #c4a97218;
+  border-radius: 4px;
+  padding: 9px 16px;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.lp-nav-cta:hover {
+  background: #c4a97230;
+  border-color: #c4a97277;
+}
+
+.lp-main {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1080px;
+  margin-inline: auto;
+  padding: 0 clamp(24px, 5vw, 48px);
+}
+
+/* ----- Hero ----- */
+.lp-hero {
+  text-align: center;
+  padding: clamp(56px, 9vw, 110px) 0 clamp(40px, 7vw, 80px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.lp-hero .wordmark-img--deck {
+  margin-bottom: clamp(28px, 4vw, 40px);
+}
+
+.lp-eyebrow {
+  font-family: var(--font-dm-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 22px;
+}
+
+.lp-hero-title {
+  font-family: var(--font-saira), "Saira Extra Condensed", sans-serif;
+  font-weight: 800;
+  font-style: italic;
+  text-transform: uppercase;
+  font-size: clamp(21px, 6.6vw, 60px);
+  line-height: 1.06;
+  letter-spacing: 0.5px;
+  color: var(--cream);
+  margin: 0 auto;
+}
+
+.lp-hero-line {
+  display: block;
+  white-space: nowrap;
+}
+
+.lp-hero-lede {
+  max-width: 620px;
+  margin: clamp(20px, 3vw, 28px) auto 0;
+  font-size: clamp(15px, 1.6vw, 17px);
+  line-height: 1.7;
+  color: var(--cream-dark);
+}
+
+.lp-hero-cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: clamp(28px, 4vw, 38px);
+}
+
+.lp-btn-ghost {
+  font-family: var(--font-dm-mono), monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--cream-dark);
+  padding: 15px 8px;
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s ease;
+}
+
+.lp-btn-ghost:hover {
+  color: var(--cream);
+}
+
+/* ----- Generic section ----- */
+.lp-section {
+  padding: clamp(48px, 7vw, 88px) 0;
+  border-top: 1px solid rgba(74, 122, 98, 0.16);
+}
+
+.lp-section-head {
+  max-width: 760px;
+  margin-bottom: clamp(32px, 5vw, 48px);
+}
+
+.lp-tag {
+  display: inline-block;
+  font-family: var(--font-dm-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 18px;
+}
+
+.lp-h2 {
+  font-family: var(--font-saira), sans-serif;
+  font-weight: 800;
+  font-style: italic;
+  text-transform: uppercase;
+  font-size: clamp(24px, 3.6vw, 38px);
+  line-height: 1.12;
+  color: var(--cream);
+}
+
+.lp-section-sub {
+  margin-top: 18px;
+  font-size: clamp(15px, 1.5vw, 16.5px);
+  line-height: 1.7;
+  color: var(--cream-dark);
+}
+
+/* ----- Grids / cards ----- */
+.lp-grid {
+  display: grid;
+  gap: clamp(16px, 2vw, 22px);
+}
+
+.lp-grid-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.lp-grid-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.lp-card {
+  background: rgba(45, 74, 62, 0.32);
+  border: 1px solid rgba(74, 122, 98, 0.28);
+  border-radius: 12px;
+  padding: clamp(22px, 3vw, 30px);
+}
+
+.lp-card-title {
+  font-family: var(--font-outfit), sans-serif;
+  font-weight: 600;
+  font-size: 17px;
+  color: var(--cream);
+  margin-bottom: 10px;
+}
+
+.lp-card-body {
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--cream-dark);
+}
+
+/* ----- Product columns ----- */
+.lp-product {
+  background:
+    radial-gradient(
+      ellipse at 15% 0%,
+      rgba(74, 122, 98, 0.22) 0%,
+      transparent 60%
+    ),
+    rgba(30, 51, 43, 0.55);
+  border: 1px solid rgba(74, 122, 98, 0.3);
+  border-radius: 16px;
+  padding: clamp(26px, 3.2vw, 36px);
+}
+
+.lp-product-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.lp-product-kicker {
+  font-family: var(--font-saira), sans-serif;
+  font-weight: 800;
+  font-style: italic;
+  text-transform: uppercase;
+  font-size: clamp(22px, 2.8vw, 30px);
+  color: var(--cream);
+  letter-spacing: 0.5px;
+}
+
+.lp-product-pill {
+  font-family: var(--font-dm-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--green-dark);
+  background: var(--tan);
+  border-radius: 999px;
+  padding: 5px 12px;
+  white-space: nowrap;
+}
+
+.lp-product-pill--alt {
+  color: var(--tan);
+  background: transparent;
+  border: 1px solid #c4a97255;
+}
+
+.lp-product-lede {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--cream-dark);
+  margin-bottom: 24px;
+}
+
+.lp-feature-list {
+  list-style: none;
+  display: grid;
+  gap: 18px;
+}
+
+.lp-feature {
+  display: grid;
+  gap: 4px;
+  padding-left: 18px;
+  border-left: 2px solid rgba(196, 169, 114, 0.45);
+}
+
+.lp-feature-title {
+  font-family: var(--font-outfit), sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--cream);
+}
+
+.lp-feature-body {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--cream-dark);
+}
+
+/* ----- Steps ----- */
+.lp-step {
+  background: rgba(45, 74, 62, 0.28);
+  border: 1px solid rgba(74, 122, 98, 0.26);
+  border-radius: 12px;
+  padding: clamp(24px, 3vw, 32px);
+}
+
+.lp-step-n {
+  display: block;
+  font-family: var(--font-saira), sans-serif;
+  font-weight: 800;
+  font-style: italic;
+  font-size: 34px;
+  color: var(--gold);
+  margin-bottom: 14px;
+}
+
+/* ----- Who ----- */
+.lp-who .lp-section-head {
+  max-width: 820px;
+  margin-bottom: 0;
+}
+
+/* ----- Mission / quote ----- */
+.lp-mission {
+  text-align: center;
+}
+
+.lp-mission .lp-tag {
+  margin-bottom: 24px;
+}
+
+.lp-quote {
+  max-width: 780px;
+  margin: 0 auto;
+  font-family: var(--font-saira), sans-serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(19px, 2.6vw, 28px);
+  line-height: 1.4;
+  color: var(--cream);
+}
+
+.lp-quote-attr {
+  margin-top: 22px;
+  font-family: var(--font-dm-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* ----- Final waitlist CTA ----- */
+.lp-cta-section {
+  text-align: center;
+}
+
+.lp-cta-title {
+  max-width: none;
+}
+
+.lp-cta-sub {
+  max-width: 520px;
+  margin-inline: auto;
+}
+
+.lp-cta-form {
+  max-width: 420px;
+  margin: clamp(28px, 4vw, 36px) auto 0;
+}
+
+@media (max-width: 760px) {
+  .lp-grid-2,
+  .lp-grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .lp-nav-link {
+    display: none;
+  }
+}
+
 @keyframes fadeIn {
   to {
     opacity: 1;
