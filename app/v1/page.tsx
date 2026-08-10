@@ -1,7 +1,17 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
 import { WaitlistForm } from "@/components/WaitlistForm";
+
+/**
+ * Superseded by the v53 landing page now served at `/` (see `next.config.ts` rewrites).
+ * Kept reachable for comparison and rollback; `noindex` so it does not compete in search.
+ */
+export const metadata: Metadata = {
+  title: "Valet · Drive more, stress less. (v1)",
+  robots: { index: false, follow: false },
+};
 
 const GARAGE_FEATURES = [
   {

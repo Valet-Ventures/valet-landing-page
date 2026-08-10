@@ -2,6 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 
 const MAX_BODY_BYTES = 8192;
 
+/**
+ * Allowlisted `waitlist_signups.source` values. The column is free text, so this is what keeps
+ * a client from writing arbitrary strings into it. Anything unrecognized falls back to `landing`.
+ */
+const SOURCES = new Set(["landing", "founding-member", "equity-partner"]);
+const DEFAULT_SOURCE = "landing";
+
 /** Permissive sanity check — avoids rejecting valid addresses that strict regexes miss. */
 function isPlausibleEmail(s: string): boolean {
   if (s.length < 3 || s.length > 254 || /\s/.test(s)) return false;
@@ -75,6 +82,9 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  const sourceRaw = typeof body.source === "string" ? body.source.trim().toLowerCase() : "";
+  const source = SOURCES.has(sourceRaw) ? sourceRaw : DEFAULT_SOURCE;
+
   const headerReferrer = req.headers.get("referer");
   const bodyReferrer = typeof body.referrer === "string" ? body.referrer.trim() : "";
   const referrer =
@@ -100,7 +110,7 @@ export async function POST(req: NextRequest) {
     },
     body: JSON.stringify({
       email,
-      source: "landing",
+      source,
       referrer,
       user_agent: userAgent,
     }),
