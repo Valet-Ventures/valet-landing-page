@@ -414,6 +414,19 @@ nav .logo{font-size:31px;}
 .acc .phone{box-shadow:0 16px 44px rgba(22,40,31,.3),inset 0 0 0 1.5px rgba(196,169,114,.35);}
 .acc .ph-card{box-shadow:0 18px 48px rgba(22,40,31,.25);}
 @media(max-width:900px){.pillar.pl-t{grid-template-columns:60px 1fr auto;}.pillar.pl-t .pill-arr{grid-row:1;grid-column:3;}}
+/* Below ~640px `60px + headline + pill` no longer fits on one line: the pill is nowrap and
+   the headline column will not shrink past its min-content, so the pill overflowed the row
+   and was clipped by body{overflow-x:hidden}. Give it its own row, left-aligned to line up
+   with the metric chips above it. Must stay after the 900px rule to win on source order. */
+@media(max-width:640px){
+  .pillar.pl-t{grid-template-columns:60px 1fr;}
+  .pillar.pl-t .pill-arr{grid-row:auto;grid-column:2;justify-self:start;margin-top:8px;}
+  /* The metric chips are nowrap, so their min-content set a ~414px floor on the content
+     column. Narrower phones (390, 375, 360) clipped both the chips and the body copy at the
+     right edge. Letting them wrap frees the column to size to the viewport. */
+  .mstack{align-items:flex-start;}
+  .mstack .mrow{white-space:normal;text-align:left;}
+}
 
 /* ---------- FEATURES ---------- */
 .feature{padding:120px 28px;position:relative;}
