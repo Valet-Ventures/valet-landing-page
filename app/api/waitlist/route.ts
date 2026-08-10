@@ -100,21 +100,37 @@ export async function POST(req: NextRequest) {
   }
   const insertUrl = `${base}/rest/v1/waitlist_signups`;
 
-  const res = await fetch(insertUrl, {
-    method: "POST",
-    headers: {
-      apikey: serviceKey,
-      Authorization: `Bearer ${serviceKey}`,
-      "Content-Type": "application/json",
-      Prefer: "return=minimal",
-    },
-    body: JSON.stringify({
-      email,
-      source,
-      referrer,
-      user_agent: userAgent,
-    }),
-  });
+  let res: Response;
+  try {
+    res = await fetch(insertUrl, {
+      method: "POST",
+      headers: {
+        apikey: serviceKey,
+        Authorization: `Bearer ${serviceKey}`,
+        "Content-Type": "application/json",
+        Prefer: "return=minimal",
+      },
+      body: JSON.stringify({
+        email,
+        source,
+        referrer,
+        user_agent: userAgent,
+      }),
+    });
+  } catch (err) {
+    /**
+     * DNS failure, refused connection, or timeout. Without this catch the rejection escapes
+     * the route and Next returns an empty 500 with no JSON body, so the client can only fall
+     * back to a generic message and the real cause is invisible outside the server log.
+     */
+    if (process.env.NODE_ENV === "development") {
+      console.error("[waitlist] Supabase request failed", err);
+    }
+    return jsonError(
+      "Could not reach the waitlist database. Check that SUPABASE_URL points at a reachable project.",
+      502,
+    );
+  }
 
   if (res.ok) {
     return NextResponse.json({ ok: true, created: true });
