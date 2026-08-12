@@ -40,15 +40,14 @@ img{display:block;}
 .logo .v{color:var(--gold);}
 .logo .rest{color:var(--cream);}
 .logo.dark .rest{color:var(--ink);}
-/* Real brand wordmark from `public/branding`, used in the page chrome in place of the
-   CSS-composed ///VALET lockup. Heights are set to the footprint the text version measured
-   (84px wide in nav, 70px in footer) so the surrounding layout is unchanged. */
+/* Real brand wordmark from `public/branding`, in place of the CSS-composed ///VALET
+   lockup. Heights match the footprint the text version measured, so layout is unchanged. */
 .logo-img{display:block;width:auto;}
 .logo-link{display:inline-flex;align-items:center;text-decoration:none;}
 nav .logo-img{height:25px;}
 footer .logo-img{height:21px;}
-/* Matches the main nav. The text logo here had no font-size rule, so it fell back to the 16px
-   body default and rendered about half the size of the one in the main nav. */
+/* The text logo here had no font-size rule, so it fell back to the 16px body default
+   and rendered about half the size of the one in the main nav. */
 .about-top .logo-img{height:25px;}
 
 /* ---------- NAV ---------- */
@@ -413,20 +412,7 @@ nav .logo{font-size:31px;}
 .acc .chip{color:var(--gold-d);border-color:rgba(184,150,62,.5);}
 .acc .phone{box-shadow:0 16px 44px rgba(22,40,31,.3),inset 0 0 0 1.5px rgba(196,169,114,.35);}
 .acc .ph-card{box-shadow:0 18px 48px rgba(22,40,31,.25);}
-@media(max-width:900px){.pillar.pl-t{grid-template-columns:60px 1fr auto;}.pillar.pl-t .pill-arr{grid-row:1;grid-column:3;}}
-/* Below ~640px `60px + headline + pill` no longer fits on one line: the pill is nowrap and
-   the headline column will not shrink past its min-content, so the pill overflowed the row
-   and was clipped by body{overflow-x:hidden}. Give it its own row, left-aligned to line up
-   with the metric chips above it. Must stay after the 900px rule to win on source order. */
-@media(max-width:640px){
-  .pillar.pl-t{grid-template-columns:60px 1fr;}
-  .pillar.pl-t .pill-arr{grid-row:auto;grid-column:2;justify-self:start;margin-top:8px;}
-  /* The metric chips are nowrap, so their min-content set a ~414px floor on the content
-     column. Narrower phones (390, 375, 360) clipped both the chips and the body copy at the
-     right edge. Letting them wrap frees the column to size to the viewport. */
-  .mstack{align-items:flex-start;}
-  .mstack .mrow{white-space:normal;text-align:left;}
-}
+@media(max-width:900px){.pillar.pl-t{grid-template-columns:60px 1fr;}.pillar.pl-t .pill-arr{grid-row:auto;grid-column:2;justify-self:start;margin-top:8px;}}
 
 /* ---------- FEATURES ---------- */
 .feature{padding:120px 28px;position:relative;}
@@ -692,6 +678,8 @@ nav .logo{font-size:31px;}
 .cprow .b{font-family:var(--mono);font-size:8.5px;color:var(--muted);margin-top:2px;letter-spacing:.3px;}
 .cprow .v{font-family:var(--mono);font-size:11px;color:#2f6b46;white-space:nowrap;flex:none;}
 .tm-wrap{height:76px;overflow:hidden;position:relative;}
+#tmCard .tm-wrap{flex:1;min-height:0;height:auto;}
+#tmCard .tm-wrap::after{content:"";position:absolute;left:0;right:0;bottom:0;height:30px;background:linear-gradient(to bottom,rgba(34,54,43,0),var(--primary));pointer-events:none;z-index:2;}
 .tm-wrap::before{content:"";position:absolute;left:0;right:0;top:0;height:16px;background:linear-gradient(to bottom,var(--primary),transparent);z-index:2;}
 .tm-wrap::after{content:"";position:absolute;left:0;right:0;bottom:0;height:16px;background:linear-gradient(to top,var(--primary),transparent);z-index:2;}
 .tm-track{display:flex;flex-direction:column;animation:tmscroll 26s linear infinite;}
@@ -801,6 +789,96 @@ footer .logo{font-size:26px;}
   .pass,.btn,.demo-track,.dscreen .scrollable,.dm-track,.dcursor{transition:none;}
 }
 </style>
+<style>
+@media(max-width:760px){
+  .hero{min-height:0;padding:102px 18px 44px;}
+  .comm-ph.tall img{height:220px;object-fit:cover;}
+  .comm-ph.short img{height:140px;object-fit:cover;}
+  .ph-card img{max-height:300px;object-fit:cover;}
+  .pillar .desc{font-size:13px;}
+  .intro h2.h-disp,.cockpit h2.h-disp{font-size:33px;}
+  .acc .feat-grid{display:flex;flex-direction:column;}
+  .acc .feat-grid .feat-copy{order:0;}
+  .acc .feat-grid .combo{order:1;}
+  .acc .combo{display:block;position:relative;padding-bottom:96px;margin-top:26px;}
+  .acc .combo .ph-card{width:100%;max-width:none;margin:0;}
+  .acc .ph-card img{height:360px;max-height:none;object-fit:cover;}
+  .acc .combo .phone{position:absolute;right:4px;bottom:0;width:310px;transform:scale(.6);transform-origin:bottom right;z-index:3;margin:0;box-shadow:0 24px 60px rgba(13,21,18,.55),inset 0 0 0 1.5px rgba(196,169,114,.35);}
+  .acc .combo.left .phone{right:auto;left:4px;transform-origin:bottom left;}
+  .acc .comm-grid{position:relative;display:block;padding-bottom:96px;}
+  .acc .comm-grid .comm-ph{width:100%;}
+  .acc .comm-grid .comm-ph.tall img{height:300px;}
+  .acc .comm-grid .comm-col{display:flex;flex-direction:row;gap:10px;margin-top:10px;}
+  .acc .comm-grid .comm-col .comm-ph{flex:1;min-width:0;}
+  .acc .comm-grid .comm-col .comm-ph.short img{height:110px;}
+  .acc .comm-grid .phone-wrap{position:absolute;right:4px;bottom:0;z-index:3;width:auto;}
+  .acc .comm-grid .phone-wrap .phone{transform:scale(.6);transform-origin:bottom right;margin:0;box-shadow:0 24px 60px rgba(13,21,18,.55),inset 0 0 0 1.5px rgba(196,169,114,.35);}
+  .acc .comm-grid .demo-cap{display:none;}
+  .feat-copy h3.h-disp,.comm-head h3.h-disp{font-size:30px;}
+  .hero-in{gap:26px;}
+  .ticker-wrap{padding:12px 0;}
+  .intro{padding:64px 18px 56px;}
+  .pillar{padding:20px 2px;gap:12px;}
+  .pillar .desc{font-size:13.5px;line-height:1.55;}
+  .pill-arr{padding:9px 13px;font-size:8px;}
+  .mstack .mrow{font-size:8.5px;padding:6px 10px;white-space:normal;}
+  .acc-pad{padding:42px 14px 58px;}
+  .feat-grid{gap:34px;}
+  .cockpit{padding:64px 18px 32px;}
+  .desk{margin:36px auto 0;box-shadow:0 22px 55px rgba(0,0,0,.5);}
+  .desk-body{grid-template-columns:186px 1fr!important;height:560px!important;min-height:0!important;}
+  .desk-side{display:block!important;overflow:visible!important;border-right:1px solid rgba(196,169,114,.18)!important;border-bottom:none!important;}
+  .dm-cols{grid-template-columns:1fr 1fr!important;}
+  .desk-cols{grid-template-columns:1.45fr 1fr!important;}
+  .desk .dcard{padding:14px 16px;}
+  #allocCard{height:246px;flex:0 0 246px;min-height:0;overflow:hidden;}
+  #tpRow{display:none;}
+  #tmCard{height:136px;flex:0 0 136px;min-height:0;max-height:136px;margin-top:13px;margin-bottom:0;overflow:hidden;display:flex;flex-direction:column;}
+  #tmCard .tm-wrap{height:74px!important;flex:none;}
+  .comm-grid{margin-top:36px;gap:16px;}
+  .chapb img{width:46px;height:31px;}
+  .chapb{gap:8px;}
+  .final{padding:64px 18px 72px;}
+  .final h2{font-size:40px;}
+  .hero h1{font-size:54px;}
+  .ab-hero .h-disp{font-size:44px;}
+  .cta-stack{min-height:0;}
+  .cta-head .t{font-size:15px;}
+  .cta-head{gap:10px;padding:16px 13px;}
+  .cta-pad{padding:0 16px 18px;}
+  .about-in{padding:52px 18px 80px;}
+  .ab-hero{padding:70px 18px 46px;}
+  .ab-band{padding:50px 18px;}
+  .ab-grid{gap:22px;}
+  .fdr-grid{gap:28px;}
+  .fdr2 img{height:230px;}
+  .ab-strip{margin-top:36px;gap:10px 18px;font-size:8.5px;}
+  footer{padding-left:18px;padding-right:18px;}
+}
+</style>
+<style>
+.mpanel{display:contents;}
+.mtabs{display:none;}
+@media(max-width:760px){
+  body{overflow:hidden;}
+  .mpanel{display:block;position:fixed;top:0;left:0;right:0;bottom:62px;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--ink);transform:translateX(102%);transition:transform .45s cubic-bezier(.55,.05,.3,1);z-index:10;}
+  .mpanel.mon{transform:none;}
+  .mpanel.mleft{transform:translateX(-30%);}
+  .mp1,.mp3{padding-top:0;}
+  .mp0{background:var(--ink);}
+  .mp1{background:var(--cream);}
+  .mtabs{display:flex;position:fixed;left:0;right:0;bottom:0;height:62px;z-index:300;background:#0d1512;border-top:1px solid rgba(196,169,114,.3);padding-bottom:env(safe-area-inset-bottom);}
+  .mtabs button{flex:1;background:none;border:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-family:var(--mono);font-size:7.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--tan);cursor:pointer;}
+  .mtabs button .ic{font-size:13px;line-height:1;}
+  .mtabs button.on{color:var(--gold);}
+  .mtabs button.on .ic{color:var(--gold);}
+  .about{bottom:0;padding-bottom:74px;z-index:250;}
+  nav{z-index:280;}
+  .hero{padding-top:118px;}
+  .intro{padding-top:96px;}
+  .final{padding-top:110px;}
+}
+</style>
 </head>
 <body>
 
@@ -814,6 +892,7 @@ footer .logo{font-size:26px;}
   </div>
 </nav>
 
+<div class="mpanel mp0 mon" id="mp0">
 <!-- ============ HERO ============ -->
 <header class="hero" id="top">
   <div class="hero-bg" aria-hidden="true">
@@ -822,13 +901,12 @@ footer .logo{font-size:26px;}
   <div class="hero-in">
     <div>
       <div class="eyebrow rv">The Enthusiast's Ownership Platform · Communities Worldwide</div>
-      <h1 class="h-disp rv d1">The purchase was<br/><span class="gold">the easy part.</span></h1>
-      <p class="hero-sub rv d2">Owning it is where the stress creeps in, because nobody tells you what the next service will cost, when the smart money would sell, or where the good Sunday drives are hiding. <strong>Valet was built to make owning as easy as buying</strong>, with the maintenance mapped years ahead, the market watched around the clock, and your people one tap away. Built by collectors, verified by VIN, and closed to everyone else.</p>
+      <h1 class="h-disp rv d1">Drive More<br/><span class="gold">Stress Less</span></h1>
+      <p class="hero-sub rv d2">The purchase was the easy part. Owning it is where the stress creeps in, because nobody tells you what the next service will cost, when the smart money would sell, or where the good Sunday drives are hiding. <strong>Valet was built to make owning as easy as buying</strong>, with the maintenance mapped years ahead, the market watched around the clock, and your people one tap away. Built by collectors, verified by VIN, and closed to everyone else.</p>
       <div class="hero-ctas rv d3">
         <a href="#join" class="btn" onclick="openJoin('m');return false;">Founding VIP Members · Free</a>
         <a href="#join" class="btn ghost" onclick="openJoin('e');return false;">Select Equity Partners</a>
       </div>
-      <div class="hero-note rv d3">Free for your garage · Founding communities forming in every region</div>
     </div>
     <div class="hero-phone rv d2">
       <div>
@@ -994,7 +1072,6 @@ footer .logo{font-size:26px;}
           </div>
           <div class="tapdot" id="tapdot"></div>
         </div></div>
-        <div class="demo-cap fig rv d3">Live demo · The app tours itself</div>
       </div>
     </div>
   </div>
@@ -1018,6 +1095,8 @@ footer .logo{font-size:26px;}
   </div>
 </div>
 
+</div>
+<div class="mpanel mp1" id="mp1">
 <!-- ============ WHAT VALET IS ============ -->
 <section class="intro" id="what">
   <div class="intro-in">
@@ -1342,8 +1421,8 @@ footer .logo{font-size:26px;}
                 <div><div class="k">Est. Growth / Yr</div><div class="v">+4.1%</div></div>
               </div>
               <div class="dm-cols" style="grid-template-columns:1fr 1.15fr">
-                <div>
-                <div class="dcard" style="flex:1 1 auto;min-height:0;overflow:hidden">
+                <div style="display:flex;flex-direction:column;min-height:0">
+                <div class="dcard" id="allocCard" style="flex:0 0 auto;overflow:hidden">
                   <div class="card-t" style="margin-bottom:11px">Value Allocation &amp; Exposure</div>
                   <div class="donut-wrap">
                     <svg viewBox="0 0 100 100">
@@ -1368,9 +1447,9 @@ footer .logo{font-size:26px;}
                     <div class="dl-bar"><span>Italian</span><i style="width:65%"></i><b>65%</b></div>
                     <div class="dl-bar"><span>German</span><i style="width:35%"></i><b>35%</b></div>
                   </div>
-                  <div style="border-top:1px solid rgba(196,169,114,.2);margin-top:8px;padding-top:7px;display:flex;justify-content:space-between;align-items:baseline;gap:10px"><span class="p-lab">Top Performer</span><span style="font-family:var(--mono);font-size:10px;color:var(--pos)">360 Spider · +26.1% (+$34,500)</span></div>
+                  <div id="tpRow"><div style="border-top:1px solid rgba(196,169,114,.2);margin-top:8px;padding-top:7px;display:flex;justify-content:space-between;align-items:baseline;gap:10px"><span class="p-lab">Top Performer</span><span style="font-family:var(--mono);font-size:10px;color:var(--pos)">360 Spider · +26.1% (+$34,500)</span></div></div>
                   </div>
-                <div class="dcard" style="margin-top:13px;flex:0 0 auto">
+                <div class="dcard" id="tmCard" style="margin-top:13px;flex:1 1 auto;min-height:0;display:flex;flex-direction:column;overflow:hidden">
                   <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px"><span class="card-t" style="font-size:15px">Your Tracked Markets</span><span style="font-family:var(--mono);font-size:8px;letter-spacing:1px;color:var(--gold);text-transform:uppercase">5 Watched · Live</span></div>
                   <div class="tm-wrap">
                     <div class="tm-track" id="tmTrack"></div>
@@ -1647,7 +1726,6 @@ footer .logo{font-size:26px;}
         <div class="dcursor" id="dcursor" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M3 1 L3 15.5 L7.4 11.8 L10.3 18.3 L12.9 17.2 L10 10.9 L15.8 10.9 Z" fill="#F5F0E8" stroke="#16281F" stroke-width="1.1"/></svg></div>
       </div>
     </div>
-    <div class="demo-cap fig rv d2">Live demo · The platform tours itself</div>
   </div>
 </section>
 
@@ -1656,6 +1734,8 @@ footer .logo{font-size:26px;}
 <!-- ============ MEMBERSHIP ============ -->
 
 
+</div>
+<div class="mpanel mp3" id="mp3">
 <!-- ============ FINAL CTA ============ -->
 <section class="final" id="join">
   <div class="final-bg" aria-hidden="true">
@@ -1758,7 +1838,7 @@ footer .logo{font-size:26px;}
           <div class="fig">Fig. 06 · The Builder</div>
           <div class="nm">Jens</div>
           <div class="rl">CTO / Cofounder</div>
-          <div class="bio">Jens is the builder. He's spent his career shipping and scaling production platforms that serious businesses run on every day, including enterprise systems used by the country's leading transportation and financial services firms. He architected Valet from the first commit and owns the road from today's product to full scale.</div>
+          <div class="bio">Jens is the builder. He's the founder of Nettlio, his own AI agency, and the most senior platform engineer at Supernal AI, where he and Johnny met. He's spent his career shipping production systems that the country's leading transportation and financial services firms rely on every day. As CTO of Valet, he owns the full technical roadmap and architecture and leads a team of platform engineers building the perpetually growing vehicle database at the core of the product.</div>
         </div>
       </div>
     </div>
@@ -1780,11 +1860,12 @@ footer .logo{font-size:26px;}
     <img class="logo-img" src="/branding/logo-white-w-gold.svg" alt="Valet" width="181" height="53" />
     <div class="copy">© 2026 VALET VENTURES INC · LOS ANGELES · DRIVE MORE, STRESS LESS</div>
     <div class="foot-links">
-      <!-- TODO: Instagram needs the real handle. Terms has no page yet. Both still point at `#`. -->
-      <a href="#">Instagram</a><a href="/privacy">Privacy</a><a href="#">Terms</a><a href="mailto:johnny@valet.app">Contact</a>
+      <!-- TODO: Instagram still needs the real handle. -->
+      <a href="#">Instagram</a><a href="/privacy">Privacy</a><a href="mailto:johnny@valet.app">Contact</a>
     </div>
   </div>
 </footer>
+</div>
 
 <script>
 /* reveals */
@@ -1909,8 +1990,9 @@ function go(i){track.style.transform='translateX(-'+(i*20)+'%)';
   const tds=tabs.children;for(const t of tds)t.classList.remove('on');
   tds[i===4?1:0].classList.add('on');}
 function tapAt(el){if(!el||!screenEl)return;const r=el.getBoundingClientRect(),s=screenEl.getBoundingClientRect();
-  tapdot.style.left=(r.left-s.left+r.width/2-17)+'px';
-  tapdot.style.top=(r.top-s.top+r.height/2-17)+'px';
+  const k=s.width/(screenEl.offsetWidth||s.width);
+  tapdot.style.left=((r.left-s.left+r.width/2)/k-17)+'px';
+  tapdot.style.top=((r.top-s.top+r.height/2)/k-17)+'px';
   tapdot.classList.remove('go');void tapdot.offsetWidth;tapdot.classList.add('go');}
 
 function runDemo(){
@@ -1942,7 +2024,8 @@ const tap2=document.getElementById('tapdot2');
 const d2screen=d2t?d2t.parentElement:null;
 function g2(i){d2t.style.transform='translateX(-'+(i*20)+'%)';}
 function tap2At(el){if(!el||!d2screen)return;const r=el.getBoundingClientRect(),s=d2screen.getBoundingClientRect();
-  tap2.style.left=(r.left-s.left+r.width/2-17)+'px';tap2.style.top=(r.top-s.top+r.height/2-17)+'px';
+  const k=s.width/(d2screen.offsetWidth||s.width);
+  tap2.style.left=((r.left-s.left+r.width/2)/k-17)+'px';tap2.style.top=((r.top-s.top+r.height/2)/k-17)+'px';
   tap2.classList.remove('go');void tap2.offsetWidth;tap2.classList.add('go');}
 function runComm(){
   const gd=document.getElementById('c2Guild'),th=document.getElementById('c2Thr'),bk=document.getElementById('c2Back');
@@ -1995,7 +2078,8 @@ const tap3=document.getElementById('tapdot3');
 const d3screen=d3t?d3t.parentElement:null;
 function g3(i){d3t.style.transform='translateX(-'+(i*50)+'%)';}
 function tap3At(el){if(!el||!d3screen)return;const r=el.getBoundingClientRect(),s=d3screen.getBoundingClientRect();
-  tap3.style.left=(r.left-s.left+r.width/2-17)+'px';tap3.style.top=(r.top-s.top+r.height/2-17)+'px';
+  const k=s.width/(d3screen.offsetWidth||s.width);
+  tap3.style.left=((r.left-s.left+r.width/2)/k-17)+'px';tap3.style.top=((r.top-s.top+r.height/2)/k-17)+'px';
   tap3.classList.remove('go');void tap3.offsetWidth;tap3.classList.add('go');}
 function runRoad(){
   const mbs=[1,2,3,4,5].map(n=>document.getElementById('mb'+n));
@@ -2049,8 +2133,8 @@ const deskBody=deskMain?deskMain.parentElement:null;
 const sideLinks=[document.getElementById('sideGarage'),document.getElementById('sideComms'),document.getElementById('sideConc')];
 function dgo(i){dtrack.style.transform='translateX(-'+(i*(100/6))+'%)';}
 function setSide(i){document.querySelectorAll('.desk-side a').forEach(a=>a.classList.remove('on'));sideLinks[i].classList.add('on');}
-function dmove(el){if(!el||!deskBody)return;const r=el.getBoundingClientRect(),s=deskBody.getBoundingClientRect();
-  dcur.style.left=(r.left-s.left+r.width/2-4)+'px';dcur.style.top=(r.top-s.top+r.height/2-2)+'px';}
+function dmove(el){if(!el||!deskBody)return;const k=window.__ds||1;const r=el.getBoundingClientRect(),s=deskBody.getBoundingClientRect();
+  dcur.style.left=((r.left-s.left+r.width/2)/k-4)+'px';dcur.style.top=((r.top-s.top+r.height/2)/k-2)+'px';}
 const dmoveSide=dmove;
 function dclick(){dcur.classList.remove('clk');void dcur.offsetWidth;dcur.classList.add('clk');}
 function runDesk(){
@@ -2174,6 +2258,46 @@ if(dtrack&&!reduce){
   const dio=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){dio.disconnect();setTimeout(runDesk,700);}})},{threshold:.35});
   dio.observe(deskMain);
 }
+</script>
+<script>
+function fitDesk(){var d=document.querySelector('.desk');if(!d)return;
+ if(window.innerWidth>760){d.style.transform='';d.style.marginBottom='';d.style.width='';d.style.maxWidth='';window.__ds=1;return;}
+ var p=d.parentElement,s=p.clientWidth/1040;window.__ds=s;
+ d.style.width='1040px';d.style.maxWidth='none';d.style.transform='scale('+s+')';d.style.transformOrigin='top left';
+ var h=d.offsetHeight;d.style.marginBottom=(-(h*(1-s)))+'px';}
+function fitHeroPhone(){var ph=document.querySelector('.hero .phone');if(!ph)return;
+ if(window.innerWidth>760){ph.style.transform='';ph.style.marginBottom='';return;}
+ var s=.72;ph.style.transform='scale('+s+')';ph.style.transformOrigin='top center';
+ var h=ph.offsetHeight;ph.style.marginBottom=(-(h*(1-s)))+'px';}
+function mobileFolds(){if(window.innerWidth>760)return;
+ var p=document.getElementById('pl3'),a=document.getElementById('acc3');
+ if(p&&a){p.classList.remove('open');a.classList.remove('open');}}
+window.addEventListener('resize',function(){fitDesk();fitHeroPhone();});
+window.addEventListener('load',function(){fitDesk();fitHeroPhone();setTimeout(function(){fitDesk();fitHeroPhone();},700);});
+mobileFolds();fitDesk();fitHeroPhone();
+</script>
+<div class="mtabs" id="mtabs" role="tablist" aria-label="Site sections">
+  <button class="on" id="mt0" onclick="mTab(0)"><span class="ic">■</span>The Mission</button>
+  <button id="mt1" onclick="mTab(1)"><span class="ic">◎</span>Platform</button>
+  <button id="mt3" onclick="mTab(3)"><span class="ic">✦</span>Access</button>
+</div>
+<script>
+var MPANELS={0:document.getElementById('mp0'),1:document.getElementById('mp1'),3:document.getElementById('mp3')};
+var MTBTNS={0:document.getElementById('mt0'),1:document.getElementById('mt1'),3:document.getElementById('mt3')};
+function mTab(i){
+  if(window.innerWidth>760)return;
+  if(abPage&&abPage.classList.contains('on')){abPage.classList.remove('on');abPage.setAttribute('aria-hidden','true');document.body.style.overflow='';}
+  Object.keys(MTBTNS).forEach(function(k){MTBTNS[k].classList.toggle('on',+k===i);});
+  Object.keys(MPANELS).forEach(function(k){MPANELS[k].classList.toggle('mon',+k===i);});
+  var p=MPANELS[i];if(p){p.scrollTop=0;}
+  setTimeout(function(){fitDesk();fitHeroPhone();},80);
+  setTimeout(function(){fitDesk();fitHeroPhone();},520);
+}
+var _openJoin=openJoin;
+openJoin=function(k){
+  if(window.innerWidth<=760){mTab(3);setTimeout(function(){ctaOpenOnly(k);},520);return;}
+  _openJoin(k);
+};
 </script>
 </body>
 </html>

@@ -18,15 +18,16 @@ const nextConfig: NextConfig = {
   },
 
   /**
-   * `/` serves the hand-built v53 landing page from `public/valet-landing-v53.html`.
-   * It is a single self-contained file (bespoke CSS + imperative demo animations), so it is
-   * served as-is rather than ported to JSX. `beforeFiles` runs ahead of filesystem routing,
-   * so this wins even if an `app/page.tsx` is reintroduced later. The previous React landing
-   * page still lives at `/v1`.
+   * `/` serves the hand-built landing page from `public/valet-landing.html`. It is a single
+   * self-contained file (bespoke CSS + imperative demo animations) and fully responsive, so
+   * it is served as-is rather than ported to JSX. The filename is deliberately unversioned:
+   * new drops land in `docs/` version-stamped, then get copied over this, so no config change
+   * is needed each time. `beforeFiles` runs ahead of filesystem routing, so this wins even if
+   * an `app/page.tsx` is reintroduced later. The previous React landing page lives at `/v1`.
    */
   async rewrites() {
     return {
-      beforeFiles: [{ source: "/", destination: "/valet-landing-v53.html" }],
+      beforeFiles: [{ source: "/", destination: "/valet-landing.html" }],
       afterFiles: [],
       fallback: [],
     };

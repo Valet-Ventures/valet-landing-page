@@ -41,5 +41,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# v53 landing source: near-duplicate of the live public/ copy, kept locally only.
-docs/valet_landing_v53.html
+# Version-stamped landing page drops from design. Each is a ~1.4MB near-duplicate of the
+# live public/valet-landing.html, so they stay local rather than bloating history. Other
+# docs/ assets (e.g. founders/ originals) are still tracked.
+docs/*.html
