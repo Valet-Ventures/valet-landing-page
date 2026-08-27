@@ -40,14 +40,14 @@ img{display:block;}
 .logo .v{color:var(--gold);}
 .logo .rest{color:var(--cream);}
 .logo.dark .rest{color:var(--ink);}
-/* Real brand wordmark from `public/branding`, in place of the CSS-composed ///VALET
-   lockup. Heights match the footprint the text version measured, so layout is unchanged. */
+/* Real brand wordmark from `public/branding`, in place of the CSS-composed ///VALET lockup.
+   Heights match the footprint the text version measured, so layout is unchanged. */
 .logo-img{display:block;width:auto;}
 .logo-link{display:inline-flex;align-items:center;text-decoration:none;}
 nav .logo-img{height:25px;}
 footer .logo-img{height:21px;}
-/* The text logo here had no font-size rule, so it fell back to the 16px body default
-   and rendered about half the size of the one in the main nav. */
+/* The text logo here had no font-size rule, so it fell back to the 16px body default and
+   rendered about half the size of the one in the main nav. */
 .about-top .logo-img{height:25px;}
 
 /* ---------- NAV ---------- */
@@ -1752,13 +1752,13 @@ footer .logo{font-size:26px;}
           <span class="s">Free for Founding Members</span>
         </button>
         <div class="cta-body"><div class="cta-bin"><div class="cta-pad">
-          <p class="cta-p">Enter your email and we'll send your login link for the mobile app and web platform. No card, no dues for founders, your garage and your communities from day one.</p>
+          <p class="cta-p">Enter your email to claim your Founding Member number. We'll confirm by email straight away, and we'll let you know when early access is ready. No card, no dues for founding members.</p>
           <form class="wait-form cta-form" data-ok="okM" data-source="founding-member" style="margin:0 auto;">
             <div class="hp" aria-hidden="true"><label>Company website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label></div>
-            <input type="email" name="email" required placeholder="YOUR@EMAIL.COM" aria-label="Email for founding member login link" />
-            <button class="btn" type="submit">Send My Login Link</button>
+            <input type="email" name="email" required placeholder="YOUR@EMAIL.COM" aria-label="Email for the Founding Member waitlist" />
+            <button class="btn" type="submit">Become a Founding Member</button>
           </form>
-          <div class="cta-ok" id="okM">✓ Login link on its way · Welcome to the founding garage</div>
+          <div class="cta-ok" id="okM">✓ You're in. Check your inbox for your Founding Member confirmation.</div>
           <div class="cta-err" role="alert"></div>
         </div></div></div>
       </div>
@@ -1879,20 +1879,30 @@ function ctaToggle(k){const m=document.getElementById('ctaM'),e=document.getElem
 function ctaOpenOnly(k){const m=document.getElementById('ctaM'),e=document.getElementById('ctaE');
   m.classList.remove('open');e.classList.remove('open');(k==='m'?m:e).classList.add('open');}
 function openJoin(k){document.getElementById('join').scrollIntoView({behavior:'smooth'});setTimeout(()=>ctaOpenOnly(k),450);}
-/* Waitlist capture → POST /api/waitlist (Supabase-backed). `data-source` tags which CTA
-   the signup came from; the route allowlists the value before it reaches the DB. */
-document.querySelectorAll('.cta-form').forEach(f=>{f.addEventListener('submit',async ev=>{ev.preventDefault();
-  const row=f.closest('.cta-row');
-  const input=f.querySelector('input[type=email]');
-  const btn=f.querySelector('button[type=submit]');
-  const errBox=row.querySelector('.cta-err');
-  const email=(input.value||'').trim();
-  if(!email)return;
+/* Waitlist capture -> POST /api/waitlist. `data-source` tags which CTA the signup came from;
+   the route allowlists the value before it reaches the database. The founding member CTA gets
+   a sequential number back and reports it inline. */
+var EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@.]+$/;
+document.querySelectorAll('.cta-form').forEach(function(f){f.addEventListener('submit',async function(ev){ev.preventDefault();
+  var row=f.closest('.cta-row');
+  var input=f.querySelector('input[type=email]');
+  var btn=f.querySelector('button[type=submit]');
+  var errBox=row.querySelector('.cta-err');
+  var okBox=row.querySelector('.cta-ok');
+  var email=(input.value||'').trim();
   row.classList.remove('err');
-  const label=btn.textContent;
-  btn.disabled=true;btn.textContent='Sending…';
+
+  if(!EMAIL_RE.test(email)){
+    errBox.textContent="\u00d7 Enter a valid email address.";
+    row.classList.add('err');
+    input.focus();
+    return;
+  }
+
+  var label=btn.textContent;
+  btn.disabled=true;btn.textContent="Sending\u2026";
   try{
-    const res=await fetch('/api/waitlist',{
+    var res=await fetch('/api/waitlist',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
@@ -1901,11 +1911,25 @@ document.querySelectorAll('.cta-form').forEach(f=>{f.addEventListener('submit',a
         website:(f.querySelector('input[name=website]')||{}).value||''
       })
     });
-    const data=await res.json().catch(()=>({}));
-    if(!res.ok)throw new Error(data&&data.error?data.error:'Something went wrong. Please try again.');
+    var data=await res.json().catch(function(){return {};});
+    if(!res.ok)throw new Error(data&&data.error?data.error:"Something went wrong. Please try again.");
+
+    if(okBox&&f.dataset.source==='founding-member'){
+      var n=data.foundingMemberNumber;
+      var num=n?" #"+n:"";
+      if(data.alreadyRegistered){
+        okBox.textContent="\u2713 You're already on the waitlist"+(n?" as Founding Member"+num:"")+". Check your inbox for your confirmation.";
+      }else if(data.emailSent){
+        okBox.textContent="\u2713 You're in"+(n?", Founding Member"+num:"")+". Check your inbox for your confirmation.";
+      }else{
+        // No confirmation went out, so do not send them to an inbox that will stay empty.
+        okBox.textContent="\u2713 You're in"+(n?", Founding Member"+num:"")+". We'll be in touch.";
+      }
+    }
+    btn.textContent=label;btn.disabled=false;
     row.classList.add('done');
   }catch(err){
-    errBox.textContent='× '+((err&&err.message)||'Network error. Please try again.');
+    errBox.textContent="\u00d7 "+((err&&err.message)||"Network error. Please try again.");
     row.classList.add('err');
     btn.disabled=false;btn.textContent=label;
   }

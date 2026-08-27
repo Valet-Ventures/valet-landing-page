@@ -1,56 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { handleSignup } from "@/lib/waitlist/handleSignup";
+import { createResendMailer, DEFAULT_FROM } from "@/lib/waitlist/mailer";
+import { createSupabaseWaitlistStore, WaitlistStoreError } from "@/lib/waitlist/store";
+
 const MAX_BODY_BYTES = 8192;
-
-/**
- * Allowlisted `waitlist_signups.source` values. The column is free text, so this is what keeps
- * a client from writing arbitrary strings into it. Anything unrecognized falls back to `landing`.
- */
-const SOURCES = new Set(["landing", "founding-member", "equity-partner"]);
-const DEFAULT_SOURCE = "landing";
-
-/** Permissive sanity check — avoids rejecting valid addresses that strict regexes miss. */
-function isPlausibleEmail(s: string): boolean {
-  if (s.length < 3 || s.length > 254 || /\s/.test(s)) return false;
-  const at = s.lastIndexOf("@");
-  if (at <= 0 || at === s.length - 1) return false;
-  const domain = s.slice(at + 1);
-  if (!domain.includes(".")) return false;
-  return true;
-}
 
 function jsonError(message: string, status: number) {
   return NextResponse.json({ ok: false, error: message }, { status });
 }
 
-function isDuplicateConflict(status: number, body: string): boolean {
-  if (status === 409) return true;
-  try {
-    const parsed = JSON.parse(body) as { code?: string };
-    return parsed.code === "23505";
-  } catch {
-    return (
-      body.includes("23505") || /duplicate key/i.test(body) || /unique constraint/i.test(body)
-    );
+function logError(context: string, err: unknown) {
+  if (process.env.NODE_ENV === "development") {
+    console.error(`[waitlist] ${context}`, err);
   }
-}
-
-/** Project root only, e.g. `https://xyz.supabase.co` — not `/rest/v1`. */
-function supabaseProjectUrl(raw: string): string {
-  let u = raw.trim().replace(/^["']|["']$/g, "");
-  u = u.replace(/\/$/, "");
-  u = u.replace(/\/rest\/v1\/?$/i, "");
-  u = u.replace(/\/$/, "");
-  return u;
 }
 
 export async function POST(req: NextRequest) {
   let parsed: unknown;
   try {
     const raw = await req.text();
-    if (raw.length > MAX_BODY_BYTES) {
-      return jsonError("Request too large", 413);
-    }
+    if (raw.length > MAX_BODY_BYTES) return jsonError("Request too large", 413);
     parsed = raw ? JSON.parse(raw) : {};
   } catch {
     return jsonError("Invalid JSON", 400);
@@ -59,22 +29,10 @@ export async function POST(req: NextRequest) {
   if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
     return jsonError("Invalid payload", 400);
   }
-
   const body = parsed as Record<string, unknown>;
-  const honeypot = typeof body.website === "string" ? body.website : "";
-  if (honeypot.trim() !== "") {
-    return NextResponse.json({ ok: true });
-  }
-
-  const emailRaw = typeof body.email === "string" ? body.email : "";
-  const email = emailRaw.trim().toLowerCase();
-  if (!email || !isPlausibleEmail(email)) {
-    return jsonError("Enter a valid email address", 422);
-  }
 
   const supabaseUrl = process.env.SUPABASE_URL?.trim();
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
-
   if (!supabaseUrl || !serviceKey) {
     return jsonError(
       "Server configuration error. Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY for the landing app (see .env.example).",
@@ -82,95 +40,40 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const sourceRaw = typeof body.source === "string" ? body.source.trim().toLowerCase() : "";
-  const source = SOURCES.has(sourceRaw) ? sourceRaw : DEFAULT_SOURCE;
-
-  const headerReferrer = req.headers.get("referer");
-  const bodyReferrer = typeof body.referrer === "string" ? body.referrer.trim() : "";
-  const referrer =
-    headerReferrer?.slice(0, 2048) ?? (bodyReferrer ? bodyReferrer.slice(0, 2048) : null);
-  const userAgent = req.headers.get("user-agent")?.slice(0, 2048) ?? null;
-
-  const base = supabaseProjectUrl(supabaseUrl);
-  if (!base.startsWith("http://") && !base.startsWith("https://")) {
+  let store;
+  try {
+    store = createSupabaseWaitlistStore(supabaseUrl, serviceKey);
+  } catch (err) {
+    logError("store init", err);
     return jsonError(
-      "SUPABASE_URL must start with https:// (copy Project URL from Supabase → Settings → Data API / API).",
+      err instanceof WaitlistStoreError ? err.message : "Server configuration error.",
       500,
     );
   }
-  const insertUrl = `${base}/rest/v1/waitlist_signups`;
 
-  let res: Response;
-  try {
-    res = await fetch(insertUrl, {
-      method: "POST",
-      headers: {
-        apikey: serviceKey,
-        Authorization: `Bearer ${serviceKey}`,
-        "Content-Type": "application/json",
-        Prefer: "return=minimal",
-      },
-      body: JSON.stringify({
-        email,
-        source,
-        referrer,
-        user_agent: userAgent,
-      }),
-    });
-  } catch (err) {
-    /**
-     * DNS failure, refused connection, or timeout. Without this catch the rejection escapes
-     * the route and Next returns an empty 500 with no JSON body, so the client can only fall
-     * back to a generic message and the real cause is invisible outside the server log.
-     */
-    if (process.env.NODE_ENV === "development") {
-      console.error("[waitlist] Supabase request failed", err);
-    }
-    return jsonError(
-      "Could not reach the waitlist database. Check that SUPABASE_URL points at a reachable project.",
-      502,
-    );
-  }
+  // Without a key the signup still succeeds; the response reports emailSent:false so the UI
+  // can avoid telling someone to check an inbox that will stay empty.
+  const resendKey = process.env.RESEND_API_KEY?.trim();
+  const mailer = resendKey
+    ? createResendMailer(resendKey, process.env.WAITLIST_EMAIL_FROM?.trim() || DEFAULT_FROM)
+    : undefined;
+  if (!resendKey) logError("email", "RESEND_API_KEY is not set; skipping confirmation email");
 
-  if (res.ok) {
-    return NextResponse.json({ ok: true, created: true });
-  }
+  const headerReferrer = req.headers.get("referer");
+  const bodyReferrer = typeof body.referrer === "string" ? body.referrer.trim() : "";
 
-  const errText = await res.text();
-  if (isDuplicateConflict(res.status, errText)) {
-    return NextResponse.json({ ok: true, created: false });
-  }
+  const result = await handleSignup(
+    {
+      email: body.email,
+      source: body.source,
+      website: body.website,
+      referrer: headerReferrer?.slice(0, 2048) ?? (bodyReferrer ? bodyReferrer.slice(0, 2048) : null),
+      userAgent: req.headers.get("user-agent")?.slice(0, 2048) ?? null,
+    },
+    { store, mailer, onError: logError },
+  );
 
-  if (process.env.NODE_ENV === "development") {
-    console.error("[waitlist] Supabase POST failed", res.status, errText);
-  }
-
-  let userMessage = "Something went wrong. Please try again.";
-  try {
-    const err = JSON.parse(errText) as { code?: string; message?: string };
-    const msg = err.message ?? "";
-    if (
-      err.code === "PGRST125" ||
-      (msg.includes("Invalid path") && msg.includes("request URL"))
-    ) {
-      userMessage =
-        "Invalid Supabase API URL. Set SUPABASE_URL to the project root only (e.g. https://YOUR_REF.supabase.co) — do not include /rest/v1.";
-    } else if (
-      err.code === "PGRST205" ||
-      msg.includes("Could not find the table") ||
-      (msg.includes("relation") && msg.includes("does not exist"))
-    ) {
-      userMessage =
-        "Waitlist storage is not set up yet. Apply the `waitlist_signups` migration to your Supabase project.";
-    } else if (res.status === 401 || res.status === 403) {
-      userMessage =
-        "Database authorization failed. Use SUPABASE_SERVICE_ROLE_KEY (not the anon key) on the server.";
-    }
-  } catch {
-    /* ignore non-JSON error bodies */
-  }
-
-  return jsonError(userMessage, 500);
+  return NextResponse.json(result.body, { status: result.status });
 }
 
 export function GET() {

@@ -12,7 +12,9 @@
     "prestart": "node scripts/ensure-next-build.mjs",
     "start": "node scripts/next-start.mjs",
     "clean": "rm -rf .next",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "node --no-warnings=MODULE_TYPELESS_PACKAGE_JSON --import ./tests/helpers/register.mjs --test 'tests/**/*.test.ts'",
+    "test:integration": "WAITLIST_INTEGRATION=1 npm run test"
   },
   "dependencies": {
     "clsx": "^2.1.1",
