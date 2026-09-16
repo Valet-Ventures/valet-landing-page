@@ -1,0 +1,15 @@
+# Next.js builds under Netlify's Next Runtime, which auto-detects everything
+# else. Only the root route needs help.
+
+# next.config.ts serves / from public/valet-landing.html with a `beforeFiles`
+# rewrite. That is Vercel-specific behaviour and Netlify's Next runtime does not
+# honour it, so / returned 404 while every other route worked. This is the
+# Netlify-native equivalent.
+#
+# force = true so the rule wins over the framework's catch-all handler, which
+# would otherwise claim / first and 404 it again.
+[[redirects]]
+  from = "/"
+  to = "/valet-landing.html"
+  status = 200
+  force = true
