@@ -26,7 +26,7 @@ const LOGO_URL = "https://www.valet.app/branding/logo-email.png";
 const UNSUBSCRIBE = "mailto:johnny@valet.app?subject=Unsubscribe%20from%20Valet%20waitlist";
 
 /** Subject line is fixed by spec. */
-export const FOUNDING_MEMBER_SUBJECT = "Welcome to Valet — You're a Founding Member";
+export const FOUNDING_MEMBER_SUBJECT = "Welcome to Valet: You're a Founding Member";
 
 function assertNumber(n: number): number {
   if (!Number.isInteger(n) || n < 1) {

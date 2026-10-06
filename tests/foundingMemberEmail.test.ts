@@ -8,7 +8,7 @@ import {
 } from "../lib/waitlist/foundingMemberEmail";
 
 test("subject matches the agreed line", () => {
-  assert.equal(FOUNDING_MEMBER_SUBJECT, "Welcome to Valet — You're a Founding Member");
+  assert.equal(FOUNDING_MEMBER_SUBJECT, "Welcome to Valet: You're a Founding Member");
 });
 
 test("html shows the number prominently and carries the required copy", () => {
