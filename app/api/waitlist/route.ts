@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { handleSignup } from "@/lib/waitlist/handleSignup";
 import { createResendMailer, DEFAULT_FROM } from "@/lib/waitlist/mailer";
+import { DEFAULT_ALERT_TO } from "@/lib/waitlist/signupAlert";
 import { createSupabaseWaitlistStore, WaitlistStoreError } from "@/lib/waitlist/store";
 
 const MAX_BODY_BYTES = 8192;
@@ -70,10 +71,16 @@ export async function POST(req: NextRequest) {
       referrer: headerReferrer?.slice(0, 2048) ?? (bodyReferrer ? bodyReferrer.slice(0, 2048) : null),
       userAgent: req.headers.get("user-agent")?.slice(0, 2048) ?? null,
     },
-    { store, mailer, onError: logError },
+    { store, mailer, alertTo: alertRecipients(), onError: logError },
   );
 
   return NextResponse.json(result.body, { status: result.status });
+}
+
+/** WAITLIST_ALERT_TO overrides the founders' addresses, comma-separated. */
+function alertRecipients(): string[] {
+  const fromEnv = process.env.WAITLIST_ALERT_TO?.split(",").map((s) => s.trim()).filter(Boolean);
+  return fromEnv?.length ? fromEnv : DEFAULT_ALERT_TO;
 }
 
 export function GET() {

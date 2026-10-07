@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 import { handleSignup } from "../lib/waitlist/handleSignup";
 import { WaitlistStoreError } from "../lib/waitlist/store";
 import { FOUNDING_MEMBER_SUBJECT } from "../lib/waitlist/foundingMemberEmail";
+import type { OutgoingEmail } from "../lib/waitlist/mailer";
 import { createFakeStore, createRecordingMailer } from "./helpers/fakes";
 
 const founding = (email: string) => ({ email, source: "founding-member" });
@@ -217,4 +218,72 @@ test("errors: a missing migration surfaces an actionable message", async () => {
 
   assert.equal(res.status, 500);
   assert.match(String(res.body.error), /founding_member_waitlist/);
+});
+
+const ALERT_TO = ["jens@valet.app", "johnny@valet.app"];
+const alertsIn = (mailer: { sent: OutgoingEmail[] }) =>
+  mailer.sent.filter((m) => Array.isArray(m.to) && m.to.join() === ALERT_TO.join());
+
+test("alerts: a new Founding Member alerts the founders, with reply-to set to the member", async () => {
+  const store = createFakeStore();
+  const mailer = createRecordingMailer();
+
+  await handleSignup(founding("new@example.com"), { store, mailer, alertTo: ALERT_TO });
+
+  const alerts = alertsIn(mailer);
+  assert.equal(alerts.length, 1);
+  assert.match(alerts[0].subject, /Founding Member #51/);
+  assert.equal(alerts[0].replyTo, "new@example.com");
+  assert.equal(mailer.sent.length, 2, "welcome email plus one alert");
+});
+
+test("alerts: a repeat Founding Member signup alerts no one", async () => {
+  const store = createFakeStore();
+  const mailer = createRecordingMailer();
+
+  await handleSignup(founding("dup@example.com"), { store, mailer, alertTo: ALERT_TO });
+  await handleSignup(founding("dup@example.com"), { store, mailer, alertTo: ALERT_TO });
+
+  assert.equal(alertsIn(mailer).length, 1);
+});
+
+test("alerts: every partnership request alerts, even from an address already on the list", async () => {
+  const store = createFakeStore();
+  const mailer = createRecordingMailer();
+  const partner = (email: string) => ({ email, source: "equity-partner" });
+
+  await handleSignup(founding("member@example.com"), { store, mailer, alertTo: ALERT_TO });
+  const repeat = await handleSignup(partner("member@example.com"), { store, mailer, alertTo: ALERT_TO });
+  const fresh = await handleSignup(partner("investor@example.com"), { store, mailer, alertTo: ALERT_TO });
+
+  assert.equal(repeat.status, 200);
+  assert.equal(repeat.body.alreadyRegistered, true);
+  assert.equal(fresh.body.created, true);
+  const partnerAlerts = alertsIn(mailer).filter((m) => /partnership request/.test(m.subject));
+  assert.equal(partnerAlerts.length, 2, "the repeat request must not vanish");
+  assert.match(partnerAlerts[0].text, /already on the list/);
+});
+
+test("alerts: no recipients configured sends no alerts", async () => {
+  const store = createFakeStore();
+  const mailer = createRecordingMailer();
+
+  await handleSignup({ email: "x@example.com", source: "equity-partner" }, { store, mailer });
+
+  assert.equal(mailer.sent.length, 0);
+});
+
+test("alerts: a failed alert still reports the signup as a success", async () => {
+  const store = createFakeStore();
+  const errors: string[] = [];
+  const mailer = createRecordingMailer(new Error("provider down"));
+
+  const res = await handleSignup(
+    { email: "y@example.com", source: "equity-partner" },
+    { store, mailer, alertTo: ALERT_TO, onError: (ctx) => errors.push(ctx) },
+  );
+
+  assert.equal(res.status, 200);
+  assert.equal(res.body.ok, true);
+  assert.deepEqual(errors, ["signup alert send"]);
 });

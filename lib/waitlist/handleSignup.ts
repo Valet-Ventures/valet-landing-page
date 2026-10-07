@@ -5,7 +5,8 @@
 import { isPlausibleEmail, normalizeEmail } from "./email";
 import { FOUNDING_MEMBER_SUBJECT, buildFoundingMemberEmailHtml, buildFoundingMemberEmailText } from "./foundingMemberEmail";
 import type { Mailer } from "./mailer";
-import { type WaitlistStore, WaitlistStoreError, resolveSource } from "./store";
+import { buildSignupAlert, shouldAlert } from "./signupAlert";
+import { type SignupSource, type WaitlistStore, WaitlistStoreError, resolveSource } from "./store";
 
 export interface SignupRequest {
   email?: unknown;
@@ -32,11 +33,13 @@ export interface SignupDeps {
   store: WaitlistStore;
   /** Omitted when no provider is configured; signup still succeeds, emailSent comes back false. */
   mailer?: Mailer;
+  /** Founders to alert about signups; omitted or empty sends no alerts. */
+  alertTo?: string[];
   onError?: (context: string, err: unknown) => void;
 }
 
 export async function handleSignup(req: SignupRequest, deps: SignupDeps): Promise<SignupResult> {
-  const { store, mailer, onError } = deps;
+  const { store, mailer, alertTo, onError } = deps;
 
   // Honeypot: answer exactly like success so a bot learns nothing, but write nothing.
   const honeypot = typeof req.website === "string" ? req.website : "";
@@ -58,9 +61,24 @@ export async function handleSignup(req: SignupRequest, deps: SignupDeps): Promis
     userAgent: req.userAgent ?? null,
   };
 
+  // The signup is already committed when this runs, so a failed alert is logged, never surfaced.
+  async function alertFounders(source: SignupSource, created: boolean, foundingMemberNumber?: number | null) {
+    if (!mailer || !alertTo?.length || !shouldAlert(source, created)) return;
+    try {
+      await mailer.send({
+        to: alertTo,
+        replyTo: email,
+        ...buildSignupAlert({ email, source, created, foundingMemberNumber, referrer: req.referrer }),
+      });
+    } catch (err) {
+      onError?.("signup alert send", err);
+    }
+  }
+
   try {
     if (source !== "founding-member") {
       const { created } = await store.addSignup(input);
+      await alertFounders(source, created);
       return { status: 200, body: { ok: true, created, alreadyRegistered: !created } };
     }
 
@@ -84,6 +102,7 @@ export async function handleSignup(req: SignupRequest, deps: SignupDeps): Promis
         onError?.("founding-member email send", err);
       }
     }
+    await alertFounders(source, outcome.created, outcome.foundingMemberNumber);
 
     return {
       status: 200,

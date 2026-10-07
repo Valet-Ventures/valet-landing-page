@@ -1,10 +1,12 @@
 /** Transactional email, behind an interface so the send can be asserted in tests. */
 
 export interface OutgoingEmail {
-  to: string;
+  to: string | string[];
   subject: string;
   html: string;
   text: string;
+  /** Where a reply goes, e.g. the person who signed up, so an alert can be answered directly. */
+  replyTo?: string;
 }
 
 export interface Mailer {
@@ -37,10 +39,11 @@ export function createResendMailer(apiKey: string, from: string = DEFAULT_FROM):
           },
           body: JSON.stringify({
             from,
-            to: [email.to],
+            to: Array.isArray(email.to) ? email.to : [email.to],
             subject: email.subject,
             html: email.html,
             text: email.text,
+            ...(email.replyTo ? { reply_to: email.replyTo } : {}),
           }),
         });
       } catch (err) {
