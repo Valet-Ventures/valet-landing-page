@@ -7,9 +7,9 @@
  * many clients that block images by default.
  *
  * Since Johnny 05 (2026-10-15) signing up gets you straight in, so the email carries the way in:
- * an "Open Valet" button for the web app, and the iPhone app as an App Store button plus a QR
- * code for people reading on a computer. The QR is a hosted PNG because email clients block SVG
- * and data URIs.
+ * an "Open Valet" button for the web app, and the iPhone app as an App Store button plus the
+ * license-plate QR code for people reading on a computer. The plate is a hosted PNG because email
+ * clients block SVG and data URIs.
  */
 
 const BG = "#121a16";
@@ -28,7 +28,9 @@ const MONO = "'DM Mono',ui-monospace,'Courier New',Courier,monospace";
 const LOGO_URL = "https://valet.app/branding/logo-email.png";
 export const WEB_APP_SIGNUP_URL = "https://platform.valet.app/auth?mode=signup";
 export const APP_STORE_URL = "https://apps.apple.com/app/valet-car-collection/id6793459186";
-const APP_QR_URL = "https://valet.app/app/valet-app-qr.png";
+/** License-plate QR (Johnny's pick, 2026-10-15), 2x PNG. It encodes valet.app/app, which
+ *  redirects to the App Store (netlify.toml), so the printed code never needs changing. */
+const APP_PLATE_URL = "https://valet.app/app/valet-app-plate.png";
 const UNSUBSCRIBE = "mailto:johnny@valet.app?subject=Unsubscribe%20from%20Valet%20emails";
 
 /** Subject line is fixed by spec. */
@@ -132,20 +134,16 @@ export function buildFoundingMemberEmailHtml(memberNumber: number): string {
 
     <tr><td class="email-content" style="background-color:${CARD};padding:0 48px 40px;">
       <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-top:1px solid rgba(184,150,62,.25);">
-        <tr>
-          <td width="148" valign="top" style="padding:28px 20px 0 0;">
-            <img src="${APP_QR_URL}" width="128" height="128" alt="QR code for Valet on the App Store" style="display:block;width:128px;height:128px;border-radius:6px;" />
-          </td>
-          <td valign="top" style="padding:28px 0 0;">
-            <div style="font-family:${MONO};font-size:10px;letter-spacing:3px;text-transform:uppercase;color:${GOLD_D};padding-bottom:10px;">Valet on iPhone</div>
-            <p style="font-family:${BODY};font-size:15px;line-height:1.6;color:${CREAM_D};font-weight:300;margin:0 0 16px;padding:0;">On a computer, scan the code with your iPhone camera. On your phone, tap the button.</p>
-            <table border="0" cellpadding="0" cellspacing="0" role="presentation"><tr>
-              <td align="center" style="border-radius:6px;border:1px solid ${GOLD};">
-                <a href="${APP_STORE_URL}" target="_blank" style="display:inline-block;padding:11px 20px;font-family:${MONO};font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:${GOLD};text-decoration:none;">Download on the App Store</a>
-              </td>
-            </tr></table>
-          </td>
-        </tr>
+        <tr><td style="padding:28px 0 0;">
+          <div style="font-family:${MONO};font-size:10px;letter-spacing:3px;text-transform:uppercase;color:${GOLD_D};padding-bottom:14px;">Valet on iPhone</div>
+          <img src="${APP_PLATE_URL}" width="484" height="235" alt="License plate with a QR code: scan to download Valet on the App Store" style="display:block;width:100%;max-width:484px;height:auto;border-radius:10px;" />
+          <p style="font-family:${BODY};font-size:15px;line-height:1.6;color:${CREAM_D};font-weight:300;margin:18px 0 16px;padding:0;">On a computer, scan the plate with your iPhone camera. On your phone, tap the button.</p>
+          <table border="0" cellpadding="0" cellspacing="0" role="presentation"><tr>
+            <td align="center" style="border-radius:6px;border:1px solid ${GOLD};">
+              <a href="${APP_STORE_URL}" target="_blank" style="display:inline-block;padding:11px 20px;font-family:${MONO};font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:${GOLD};text-decoration:none;">Download on the App Store</a>
+            </td>
+          </tr></table>
+        </td></tr>
       </table>
     </td></tr>
 

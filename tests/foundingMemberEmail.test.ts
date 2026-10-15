@@ -42,9 +42,9 @@ test("html links to the web app, the App Store and unsubscribe, and nothing else
   assert.match(hrefs[2], /^mailto:.*Unsubscribe/);
 });
 
-test("html shows the App Store QR code as a hosted image with alt text", () => {
+test("html shows the license-plate QR code as a hosted image with alt text", () => {
   const html = buildFoundingMemberEmailHtml(51);
-  assert.match(html, /<img[^>]*src="https:\/\/valet\.app\/app\/valet-app-qr\.png"[^>]*alt="QR code for Valet on the App Store"/);
+  assert.match(html, /<img[^>]*src="https:\/\/valet\.app\/app\/valet-app-plate\.png"[^>]*alt="License plate with a QR code: scan to download Valet on the App Store"/);
   assert.ok(!/src="data:/.test(html), "email clients block data URIs");
 });
 
