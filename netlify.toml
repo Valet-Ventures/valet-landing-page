@@ -13,3 +13,11 @@
   to = "/valet-landing.html"
   status = 200
   force = true
+
+# Short link printed in the Valet QR codes (2026-10-15). Kept on our domain so the codes never need
+# reprinting if the destination changes; 302 so browsers don't cache it forever.
+[[redirects]]
+  from = "/app"
+  to = "https://apps.apple.com/app/valet-car-collection/id6793459186"
+  status = 302
+  force = true
