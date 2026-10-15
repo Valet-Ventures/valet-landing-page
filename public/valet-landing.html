@@ -1752,13 +1752,13 @@ footer .logo{font-size:26px;}
           <span class="s">Free for Founding Members</span>
         </button>
         <div class="cta-body"><div class="cta-bin"><div class="cta-pad">
-          <p class="cta-p">Enter your email to claim your Founding Member number. We'll confirm by email straight away, and we'll let you know when early access is ready. No card, no dues for founding members.</p>
+          <p class="cta-p">Enter your email to claim your Founding Member number and go straight into Valet to create your account. We'll email your number with a link to the iPhone app. No card, no dues for founding members.</p>
           <form class="wait-form cta-form" data-ok="okM" data-source="founding-member" style="margin:0 auto;">
             <div class="hp" aria-hidden="true"><label>Company website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label></div>
-            <input type="email" name="email" required placeholder="YOUR@EMAIL.COM" aria-label="Email for the Founding Member waitlist" />
+            <input type="email" name="email" required placeholder="YOUR@EMAIL.COM" aria-label="Email to become a Founding Member" />
             <button class="btn" type="submit">Become a Founding Member</button>
           </form>
-          <div class="cta-ok" id="okM">✓ You're in. Check your inbox for your Founding Member confirmation.</div>
+          <div class="cta-ok" id="okM">✓ You're in. Taking you to Valet…</div>
           <div class="cta-err" role="alert"></div>
         </div></div></div>
       </div>
@@ -1883,6 +1883,7 @@ function openJoin(k){document.getElementById('join').scrollIntoView({behavior:'s
    the route allowlists the value before it reaches the database. The founding member CTA gets
    a sequential number back and reports it inline. */
 var EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@.]+$/;
+var APP_ORIGIN="https://platform.valet.app";
 document.querySelectorAll('.cta-form').forEach(function(f){f.addEventListener('submit',async function(ev){ev.preventDefault();
   var row=f.closest('.cta-row');
   var input=f.querySelector('input[type=email]');
@@ -1917,14 +1918,13 @@ document.querySelectorAll('.cta-form').forEach(function(f){f.addEventListener('s
     if(okBox&&f.dataset.source==='founding-member'){
       var n=data.foundingMemberNumber;
       var num=n?" #"+n:"";
-      if(data.alreadyRegistered){
-        okBox.textContent="\u2713 You're already on the waitlist"+(n?" as Founding Member"+num:"")+". Check your inbox for your confirmation.";
-      }else if(data.emailSent){
-        okBox.textContent="\u2713 You're in"+(n?", Founding Member"+num:"")+". Check your inbox for your confirmation.";
-      }else{
-        // No confirmation went out, so do not send them to an inbox that will stay empty.
-        okBox.textContent="\u2713 You're in"+(n?", Founding Member"+num:"")+". We'll be in touch.";
-      }
+      // Straight into the platform (Johnny 05): sign up, or sign in if the email already has an
+      // account. The email rides in the fragment, which never reaches a server or its logs.
+      var dest=APP_ORIGIN+"/auth"+(data.hasAccount?"":"?mode=signup")+"#email="+encodeURIComponent(email);
+      okBox.textContent=data.hasAccount
+        ? "\u2713 Welcome back"+(n?", Founding Member"+num:"")+". Taking you to sign in\u2026"
+        : "\u2713 You're in"+(n?", Founding Member"+num:"")+". Taking you to Valet to create your account\u2026";
+      setTimeout(function(){window.location.href=dest;},1600);
     }
     btn.textContent=label;btn.disabled=false;
     row.classList.add('done');

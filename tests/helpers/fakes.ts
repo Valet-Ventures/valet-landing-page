@@ -5,6 +5,8 @@ import type { ClaimOutcome, SignupInput, WaitlistStore } from "../../lib/waitlis
 export interface FakeStore extends WaitlistStore {
   rows: Map<string, { number: number | null; status: string; source: string }>;
   claimCalls: number;
+  /** Emails that already have a Valet account. */
+  accounts: Set<string>;
   /** Seed a row that predates the migration, i.e. present but with no number. */
   seedUnnumbered(email: string): void;
 }
@@ -16,12 +18,19 @@ export interface FakeStore extends WaitlistStore {
  */
 export function createFakeStore(startAt = 50): FakeStore {
   const rows = new Map<string, { number: number | null; status: string; source: string }>();
+  const accounts = new Set<string>();
   let counter = startAt;
   let queue: Promise<unknown> = Promise.resolve();
 
   const store: FakeStore = {
     rows,
     claimCalls: 0,
+
+    accounts,
+
+    async hasAccount(email: string) {
+      return accounts.has(email);
+    },
 
     seedUnnumbered(email) {
       rows.set(email, { number: null, status: "new", source: "landing" });

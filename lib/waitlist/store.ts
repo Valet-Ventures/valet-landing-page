@@ -47,6 +47,8 @@ export interface WaitlistStore {
   claimFoundingMember(input: SignupInput): Promise<ClaimOutcome>;
   /** Plain signup for sources that do not get a founding member number. */
   addSignup(input: SignupInput): Promise<{ created: boolean }>;
+  /** Whether this email already has a Valet account, so the website can send them to sign in. */
+  hasAccount(email: string): Promise<boolean>;
 }
 
 /** Project root only, e.g. `https://xyz.supabase.co` — not `/rest/v1`. */
@@ -130,6 +132,15 @@ export function createSupabaseWaitlistStore(rawUrl: string, serviceKey: string):
         created: Boolean(row.created),
         status: row.status,
       };
+    },
+
+    async hasAccount(email) {
+      const res = await post("/rest/v1/rpc/email_has_account", { p_email: email });
+      const text = await res.text();
+      if (!res.ok) {
+        throw new WaitlistStoreError(mapPostgrestError(res.status, text), "rejected", text);
+      }
+      return JSON.parse(text) === true;
     },
 
     async addSignup(input) {

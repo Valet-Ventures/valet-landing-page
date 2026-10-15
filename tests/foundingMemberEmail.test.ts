@@ -2,7 +2,9 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import {
+  APP_STORE_URL,
   FOUNDING_MEMBER_SUBJECT,
+  WEB_APP_SIGNUP_URL,
   buildFoundingMemberEmailHtml,
   buildFoundingMemberEmailText,
 } from "../lib/waitlist/foundingMemberEmail";
@@ -16,9 +18,9 @@ test("html shows the number prominently and carries the required copy", () => {
 
   assert.match(html, /#51/);
   assert.match(html, /You're officially Founding Member #51\./);
-  assert.match(html, /YOU'RE ON THE<br>VALET WAITLIST\./);
-  assert.match(html, /We'll let you know when early access is ready\./);
-  assert.match(html, /Founding Members will be among the first to experience Valet and help shape what comes next\./);
+  assert.match(html, /WELCOME TO<br>VALET\./);
+  assert.match(html, /Your garage is ready\./);
+  assert.ok(!/waitlist|early access/i.test(html.replace(/mailto:[^"]+/g, "")), "signup is no longer a waitlist");
 
   // The number gets its own oversized treatment, not just a mention in a sentence.
   assert.match(html, /class="member-number"[^>]*font-size:76px/);
@@ -31,20 +33,29 @@ test("html renders whatever number it is given", () => {
   }
 });
 
-test("html is CTA-free: the only link is unsubscribe", () => {
+test("html links to the web app, the App Store and unsubscribe, and nothing else", () => {
   const html = buildFoundingMemberEmailHtml(51);
   const hrefs = [...html.matchAll(/href="([^"]+)"/g)].map((m) => m[1]);
 
-  assert.equal(hrefs.length, 1, `expected only an unsubscribe link, got ${JSON.stringify(hrefs)}`);
-  assert.match(hrefs[0], /^mailto:.*Unsubscribe/);
+  assert.deepEqual(hrefs.slice(0, 2), [WEB_APP_SIGNUP_URL, APP_STORE_URL]);
+  assert.equal(hrefs.length, 3, `unexpected links: ${JSON.stringify(hrefs)}`);
+  assert.match(hrefs[2], /^mailto:.*Unsubscribe/);
 });
 
-test("html promises no date and no immediate access", () => {
-  const html = buildFoundingMemberEmailHtml(51).toLowerCase();
+test("html shows the App Store QR code as a hosted image with alt text", () => {
+  const html = buildFoundingMemberEmailHtml(51);
+  assert.match(html, /<img[^>]*src="https:\/\/valet\.app\/app\/valet-app-qr\.png"[^>]*alt="QR code for Valet on the App Store"/);
+  assert.ok(!/src="data:/.test(html), "email clients block data URIs");
+});
 
-  for (const forbidden of ["log in", "login", "sign in", "get started", "download the app", "launches on", "available now", "your account is ready"]) {
-    assert.ok(!html.includes(forbidden), `must not promise: ${forbidden}`);
-  }
+test("text version carries both links", () => {
+  const text = buildFoundingMemberEmailText(51);
+  assert.ok(text.includes(WEB_APP_SIGNUP_URL));
+  assert.ok(text.includes(APP_STORE_URL));
+});
+
+test("html promises no date", () => {
+  const html = buildFoundingMemberEmailHtml(51).toLowerCase();
   assert.ok(!/\b(january|february|march|april|may|june|july|august|september|october|november|december)\s+\d{1,2}/.test(html));
 });
 
@@ -65,9 +76,9 @@ test("text fallback is plain, complete, and has no markup", () => {
 
   assert.ok(!/<[a-z][^>]*>/i.test(text), "plain-text part must contain no markup");
   assert.match(text, /You're officially Founding Member #51\./);
-  assert.match(text, /You're on the Valet waitlist\./);
-  assert.match(text, /We'll let you know when early access is ready\./);
-  assert.match(text, /help shape\nwhat comes next\./);
+  assert.match(text, /Your garage is ready\./);
+  assert.match(text, /help shape what comes next\./);
+  assert.ok(!/waitlist|early access/i.test(text.replace(/Unsubscribe.*$/im, "")), "signup is no longer a waitlist");
 });
 
 test("rejects a number that is missing or nonsensical", () => {

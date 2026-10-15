@@ -287,3 +287,31 @@ test("alerts: a failed alert still reports the signup as a success", async () =>
   assert.equal(res.body.ok, true);
   assert.deepEqual(errors, ["signup alert send"]);
 });
+
+test("account check: a new person is sent to sign up, an existing account to sign in", async () => {
+  const store = createFakeStore();
+  const mailer = createRecordingMailer();
+  store.accounts.add("existing@example.com");
+
+  const fresh = await handleSignup(founding("fresh@example.com"), { store, mailer });
+  const existing = await handleSignup(founding("existing@example.com"), { store, mailer });
+
+  assert.equal(fresh.body.hasAccount, false);
+  assert.equal(existing.body.hasAccount, true);
+});
+
+test("account check: a failure still completes the signup and defaults to sign up", async () => {
+  const store = createFakeStore();
+  const mailer = createRecordingMailer();
+  const errors: string[] = [];
+  store.hasAccount = async () => {
+    throw new Error("rpc missing");
+  };
+
+  const res = await handleSignup(founding("x@example.com"), { store, mailer, onError: (c) => errors.push(c) });
+
+  assert.equal(res.status, 200);
+  assert.equal(res.body.foundingMemberNumber, 51);
+  assert.equal(res.body.hasAccount, false);
+  assert.deepEqual(errors, ["account check"]);
+});

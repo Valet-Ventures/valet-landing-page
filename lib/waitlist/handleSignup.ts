@@ -25,6 +25,8 @@ export interface SignupResult {
     alreadyRegistered?: boolean;
     foundingMemberNumber?: number | null;
     emailSent?: boolean;
+    /** Founding Member signups only: true sends them to sign in rather than sign up. */
+    hasAccount?: boolean;
     error?: string;
   };
 }
@@ -104,6 +106,14 @@ export async function handleSignup(req: SignupRequest, deps: SignupDeps): Promis
     }
     await alertFounders(source, outcome.created, outcome.foundingMemberNumber);
 
+    // Best effort: if the check fails they go to sign-up, which tells them they already have one.
+    let hasAccount = false;
+    try {
+      hasAccount = await store.hasAccount(email);
+    } catch (err) {
+      onError?.("account check", err);
+    }
+
     return {
       status: 200,
       body: {
@@ -112,6 +122,7 @@ export async function handleSignup(req: SignupRequest, deps: SignupDeps): Promis
         alreadyRegistered: !outcome.created,
         foundingMemberNumber: outcome.foundingMemberNumber,
         emailSent,
+        hasAccount,
       },
     };
   } catch (err) {

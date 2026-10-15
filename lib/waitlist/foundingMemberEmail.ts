@@ -6,7 +6,10 @@
  * baked in so it blends with the header even before it loads, and it carries alt text for the
  * many clients that block images by default.
  *
- * Deliberately CTA-free, and it makes no promise about dates or access.
+ * Since Johnny 05 (2026-10-15) signing up gets you straight in, so the email carries the way in:
+ * an "Open Valet" button for the web app, and the iPhone app as an App Store button plus a QR
+ * code for people reading on a computer. The QR is a hosted PNG because email clients block SVG
+ * and data URIs.
  */
 
 const BG = "#121a16";
@@ -22,8 +25,11 @@ const DISPLAY = "'Saira Extra Condensed','Arial Narrow',Arial,sans-serif";
 const BODY = "'Outfit',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif";
 const MONO = "'DM Mono',ui-monospace,'Courier New',Courier,monospace";
 
-const LOGO_URL = "https://www.valet.app/branding/logo-email.png";
-const UNSUBSCRIBE = "mailto:johnny@valet.app?subject=Unsubscribe%20from%20Valet%20waitlist";
+const LOGO_URL = "https://valet.app/branding/logo-email.png";
+export const WEB_APP_SIGNUP_URL = "https://platform.valet.app/auth?mode=signup";
+export const APP_STORE_URL = "https://apps.apple.com/app/valet-car-collection/id6793459186";
+const APP_QR_URL = "https://valet.app/app/valet-app-qr.png";
+const UNSUBSCRIBE = "mailto:johnny@valet.app?subject=Unsubscribe%20from%20Valet%20emails";
 
 /** Subject line is fixed by spec. */
 export const FOUNDING_MEMBER_SUBJECT = "Welcome to Valet: You're a Founding Member";
@@ -42,23 +48,23 @@ export function buildFoundingMemberEmailText(memberNumber: number): string {
     "",
     `You're officially Founding Member #${n}.`,
     "",
-    "You're on the Valet waitlist.",
+    "Your garage is ready. Create your account on the web, then take Valet with you on your iPhone.",
     "",
-    "We'll let you know when early access is ready.",
+    `Open Valet: ${WEB_APP_SIGNUP_URL}`,
+    `Valet on the App Store: ${APP_STORE_URL}`,
     "",
-    "Founding Members will be among the first to experience Valet and help shape",
-    "what comes next.",
+    "Founding Members are the first to use Valet and help shape what comes next.",
     "",
     "---",
     "© 2026 Valet Ventures Inc.",
-    "You're receiving this because you joined the Valet waitlist.",
+    "You're receiving this because you joined Valet as a Founding Member.",
     "To unsubscribe, reply to this email or write to johnny@valet.app.",
   ].join("\n");
 }
 
 export function buildFoundingMemberEmailHtml(memberNumber: number): string {
   const n = assertNumber(memberNumber);
-  const preheader = `You're officially Founding Member #${n}. We'll let you know when early access is ready.`;
+  const preheader = `You're officially Founding Member #${n}. Your garage is ready, on the web and on iPhone.`;
 
   return `<!DOCTYPE html>
 <html lang="en" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -99,7 +105,7 @@ export function buildFoundingMemberEmailHtml(memberNumber: number): string {
         <td style="font-family:${BODY};font-size:11px;color:${GOLD_B};letter-spacing:4px;text-transform:uppercase;padding-left:12px;font-weight:300;">FOUNDING MEMBER</td>
       </tr></table>
 
-      <h1 class="hero-headline" style="font-family:${DISPLAY};font-weight:800;font-style:italic;font-size:48px;line-height:.95;letter-spacing:-1px;text-transform:uppercase;color:${CREAM};margin:0;padding:0;">YOU'RE ON THE<br>VALET WAITLIST.</h1>
+      <h1 class="hero-headline" style="font-family:${DISPLAY};font-weight:800;font-style:italic;font-size:48px;line-height:.95;letter-spacing:-1px;text-transform:uppercase;color:${CREAM};margin:0;padding:0;">WELCOME TO<br>VALET.</h1>
       <div style="width:48px;height:1.5px;background-color:${GOLD_D};margin:24px 0 28px;"></div>
     </td></tr>
 
@@ -115,13 +121,37 @@ export function buildFoundingMemberEmailHtml(memberNumber: number): string {
 
     <tr><td class="email-content" style="background-color:${CARD};padding:30px 48px 40px;">
       <p style="font-family:${BODY};font-size:16px;line-height:1.7;color:${CREAM};font-weight:400;margin:0 0 16px;padding:0;">You're officially Founding Member #${n}.</p>
-      <p style="font-family:${BODY};font-size:16px;line-height:1.7;color:${CREAM_D};font-weight:300;margin:0 0 16px;padding:0;">We'll let you know when early access is ready.</p>
-      <p style="font-family:${BODY};font-size:16px;line-height:1.7;color:${CREAM_D};font-weight:300;margin:0;padding:0;">Founding Members will be among the first to experience Valet and help shape what comes next.</p>
+      <p style="font-family:${BODY};font-size:16px;line-height:1.7;color:${CREAM_D};font-weight:300;margin:0 0 16px;padding:0;">Your garage is ready. Create your account on the web, then take Valet with you on your iPhone.</p>
+      <p style="font-family:${BODY};font-size:16px;line-height:1.7;color:${CREAM_D};font-weight:300;margin:0 0 26px;padding:0;">Founding Members are the first to use Valet and help shape what comes next.</p>
+      <table border="0" cellpadding="0" cellspacing="0" role="presentation"><tr>
+        <td align="center" bgcolor="${GOLD}" style="border-radius:6px;background-color:${GOLD};">
+          <a href="${WEB_APP_SIGNUP_URL}" target="_blank" style="display:inline-block;padding:14px 30px;font-family:${MONO};font-size:13px;letter-spacing:2px;text-transform:uppercase;color:${BG};text-decoration:none;font-weight:500;">Open Valet</a>
+        </td>
+      </tr></table>
+    </td></tr>
+
+    <tr><td class="email-content" style="background-color:${CARD};padding:0 48px 40px;">
+      <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-top:1px solid rgba(184,150,62,.25);">
+        <tr>
+          <td width="148" valign="top" style="padding:28px 20px 0 0;">
+            <img src="${APP_QR_URL}" width="128" height="128" alt="QR code for Valet on the App Store" style="display:block;width:128px;height:128px;border-radius:6px;" />
+          </td>
+          <td valign="top" style="padding:28px 0 0;">
+            <div style="font-family:${MONO};font-size:10px;letter-spacing:3px;text-transform:uppercase;color:${GOLD_D};padding-bottom:10px;">Valet on iPhone</div>
+            <p style="font-family:${BODY};font-size:15px;line-height:1.6;color:${CREAM_D};font-weight:300;margin:0 0 16px;padding:0;">On a computer, scan the code with your iPhone camera. On your phone, tap the button.</p>
+            <table border="0" cellpadding="0" cellspacing="0" role="presentation"><tr>
+              <td align="center" style="border-radius:6px;border:1px solid ${GOLD};">
+                <a href="${APP_STORE_URL}" target="_blank" style="display:inline-block;padding:11px 20px;font-family:${MONO};font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:${GOLD};text-decoration:none;">Download on the App Store</a>
+              </td>
+            </tr></table>
+          </td>
+        </tr>
+      </table>
     </td></tr>
 
     <tr><td align="center" style="background-color:${BG};border-radius:0 0 4px 4px;padding:28px 48px 8px;">
       <p style="font-family:${MONO};font-size:10px;letter-spacing:1.5px;color:${MUTED};margin:0 0 8px;padding:0;">&copy; 2026 VALET VENTURES INC</p>
-      <p style="font-family:${BODY};font-size:11px;line-height:1.6;color:${MUTED};font-weight:300;margin:0;padding:0;">You're receiving this because you joined the Valet waitlist.<br><a href="${UNSUBSCRIBE}" style="color:${GOLD_D};text-decoration:underline;">Unsubscribe</a></p>
+      <p style="font-family:${BODY};font-size:11px;line-height:1.6;color:${MUTED};font-weight:300;margin:0;padding:0;">You're receiving this because you joined Valet as a Founding Member.<br><a href="${UNSUBSCRIBE}" style="color:${GOLD_D};text-decoration:underline;">Unsubscribe</a></p>
     </td></tr>
 
   </table>
