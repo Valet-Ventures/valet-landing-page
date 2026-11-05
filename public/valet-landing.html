@@ -373,11 +373,12 @@ nav .logo{font-size:31px;}
 @keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
 /* ---------- INTRO ---------- */
-.intro{background:var(--cream);color:var(--ink);padding:120px 28px 110px;}
+.intro{background:var(--cream);color:var(--ink);padding:84px 28px 72px;}
 .intro-in{max-width:1160px;margin:0 auto;}
-.intro h2{font-size:clamp(38px,4.8vw,66px);color:var(--ink);max-width:980px;margin-top:26px;}
+.intro h2{font-size:clamp(34px,4.1vw,58px);color:var(--ink);max-width:none;margin-top:22px;}
 .intro h2 em{font-style:italic;color:var(--gold-d);}
-.pillars{margin-top:66px;border-top:2px solid var(--ink);}
+.intro h2 .h2-sub{display:block;font-size:.72em;margin-top:.18em;}
+.pillars{margin-top:44px;border-top:2px solid var(--ink);}
 .pillar{display:grid;grid-template-columns:110px .9fr 1.35fr 300px;gap:30px;align-items:center;padding:30px 4px;border-bottom:1px solid rgba(44,44,44,.22);transition:border-bottom-color .4s ease;}
 .pillar.open{border-bottom-color:transparent;}
 @media(max-width:900px){.pillar{grid-template-columns:60px 1fr;gap:14px}.pillar .desc{grid-column:2}.pillar .metric{grid-column:2;justify-self:start;margin-top:4px}.mstack{grid-column:2;justify-self:start;margin-top:4px;align-items:flex-start}}
@@ -388,11 +389,11 @@ nav .logo{font-size:31px;}
 .mstack{display:flex;flex-direction:column;gap:6px;justify-self:end;align-items:stretch;}
 .mstack .mrow{font-family:var(--mono);font-size:9.5px;letter-spacing:1.3px;text-transform:uppercase;color:var(--gold-d);border:1px solid rgba(184,150,62,.5);padding:7px 13px;white-space:nowrap;text-align:center;}
 .pillar.pl-t{grid-template-columns:110px .9fr 1.3fr 300px auto;cursor:pointer;}
-.pill-arr{display:inline-flex;align-items:center;gap:9px;border:1.5px solid rgba(184,150,62,.65);border-radius:26px;padding:11px 17px;font-family:var(--mono);font-size:8.5px;letter-spacing:1.8px;text-transform:uppercase;color:var(--gold-d);justify-self:end;transition:background .35s ease,color .35s ease,border-color .35s ease;white-space:nowrap;flex:none;}
+.pill-arr{display:inline-flex;align-items:center;gap:10px;border:1.5px solid var(--gold-d);border-radius:26px;padding:13px 22px;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:1.8px;text-transform:uppercase;color:var(--cream);background:var(--gold-d);cursor:pointer;justify-self:end;transition:background .35s ease,color .35s ease,border-color .35s ease;white-space:nowrap;flex:none;}
 .pill-arr .pa-ar{font-size:12px;transition:transform .5s ease;line-height:1;}
 .pill-arr .pa-l2{display:none;}
-.pillar.pl-t:hover .pill-arr{background:var(--gold-d);color:var(--cream);border-color:var(--gold-d);}
-.pillar.open .pill-arr{background:var(--gold-d);color:var(--cream);border-color:var(--gold-d);}
+.pillar.pl-t:hover .pill-arr{background:var(--ink);color:var(--cream);border-color:var(--ink);}
+.pillar.open .pill-arr{background:var(--ink);color:var(--cream);border-color:var(--ink);}
 .pillar.open .pill-arr .pa-ar{transform:rotate(180deg);}
 .pillar.open .pill-arr .pa-l1{display:none;}
 .pillar.open .pill-arr .pa-l2{display:inline;}
@@ -415,7 +416,7 @@ nav .logo{font-size:31px;}
 @media(max-width:900px){.pillar.pl-t{grid-template-columns:60px 1fr;}.pillar.pl-t .pill-arr{grid-row:auto;grid-column:2;justify-self:start;margin-top:8px;}}
 
 /* ---------- FEATURES ---------- */
-.feature{padding:120px 28px;position:relative;}
+.feature{padding:84px 28px;position:relative;}
 .feature.ink{background:var(--ink);}
 .feat-in{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center;}
 @media(max-width:1020px){.feat-in{grid-template-columns:1fr;gap:50px;}}
@@ -698,7 +699,7 @@ nav .logo{font-size:31px;}
 .hea.on{color:var(--gold);transform:scale(1.12);}
 
 /* ---------- COMMUNITY ---------- */
-.community{background:var(--cream);color:var(--ink);padding:130px 28px 120px;}
+.community{background:var(--cream);color:var(--ink);padding:92px 28px 84px;}
 .comm-in{max-width:1280px;margin:0 auto;}
 .comm-head{max-width:880px;}
 .comm-head h3{font-size:clamp(44px,5.4vw,72px);color:var(--ink);margin-top:24px;}
@@ -727,7 +728,7 @@ nav .logo{font-size:31px;}
 .chap-note{margin-top:18px;font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-align:center;}
 
 /* ---------- MEMBERSHIP ---------- */
-.membership{background:var(--ink);padding:130px 28px;position:relative;overflow:hidden;}
+.membership{background:var(--ink);padding:92px 28px;position:relative;overflow:hidden;}
 .mem-in{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;position:relative;z-index:2;}
 @media(max-width:1020px){.mem-in{grid-template-columns:1fr;gap:56px;}}
 .mem-copy h3{font-size:clamp(42px,4.8vw,64px);color:var(--cream);margin-top:24px;}
@@ -757,7 +758,7 @@ nav .logo{font-size:31px;}
 .pass-foot .serial{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);}
 
 /* ---------- FINAL ---------- */
-.final{position:relative;padding:170px 28px 150px;text-align:center;overflow:hidden;}
+.final{position:relative;padding:112px 28px 100px;text-align:center;overflow:hidden;}
 .final-bg{position:absolute;inset:0;}
 .final-bg img{width:100%;height:100%;object-fit:cover;}
 .final-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(22,40,31,.94),rgba(22,40,31,.82) 50%,rgba(22,40,31,.95));}
@@ -796,7 +797,7 @@ footer .logo{font-size:26px;}
   .comm-ph.short img{height:140px;object-fit:cover;}
   .ph-card img{max-height:300px;object-fit:cover;}
   .pillar .desc{font-size:13px;}
-  .intro h2.h-disp,.cockpit h2.h-disp{font-size:33px;}
+  .intro h2.h-disp,.cockpit h2.h-disp{font-size:31px;}
   .acc .feat-grid{display:flex;flex-direction:column;}
   .acc .feat-grid .feat-copy{order:0;}
   .acc .feat-grid .combo{order:1;}
@@ -819,9 +820,9 @@ footer .logo{font-size:26px;}
   .ticker-wrap{padding:12px 0;}
   .intro{padding:64px 18px 56px;}
   .pillar{padding:20px 2px;gap:12px;}
-  .pillar .desc{font-size:13.5px;line-height:1.55;}
-  .pill-arr{padding:9px 13px;font-size:8px;}
-  .mstack .mrow{font-size:8.5px;padding:6px 10px;white-space:normal;}
+  .pillar .desc{font-size:15px;line-height:1.55;}
+  .pill-arr{padding:12px 18px;font-size:10.5px;}
+  .mstack .mrow{font-size:10px;padding:7px 11px;white-space:normal;}
   .acc-pad{padding:42px 14px 58px;}
   .feat-grid{gap:34px;}
   .cockpit{padding:64px 18px 32px;}
@@ -852,7 +853,7 @@ footer .logo{font-size:26px;}
   .ab-grid{gap:22px;}
   .fdr-grid{gap:28px;}
   .fdr2 img{height:230px;}
-  .ab-strip{margin-top:36px;gap:10px 18px;font-size:8.5px;}
+  .ab-strip{margin-top:36px;gap:10px 18px;font-size:10px;}
   footer{padding-left:18px;padding-right:18px;}
 }
 </style>
@@ -868,8 +869,8 @@ footer .logo{font-size:26px;}
   .mp0{background:var(--ink);}
   .mp1{background:var(--cream);}
   .mtabs{display:flex;position:fixed;left:0;right:0;bottom:0;height:62px;z-index:300;background:#0d1512;border-top:1px solid rgba(196,169,114,.3);padding-bottom:env(safe-area-inset-bottom);}
-  .mtabs button{flex:1;background:none;border:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-family:var(--mono);font-size:7.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--tan);cursor:pointer;}
-  .mtabs button .ic{font-size:13px;line-height:1;}
+  .mtabs button{flex:1;background:none;border:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-family:var(--mono);font-size:9.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--tan);cursor:pointer;}
+  .mtabs button .ic{font-size:15px;line-height:1;}
   .mtabs button.on{color:var(--gold);}
   .mtabs button.on .ic{color:var(--gold);}
   .about{bottom:0;padding-bottom:74px;z-index:250;}
@@ -1101,7 +1102,7 @@ footer .logo{font-size:26px;}
 <section class="intro" id="what">
   <div class="intro-in">
     <div class="eyebrow dark rv">What Valet Is</div>
-    <h2 class="h-disp rv d1">One app for the whole ownership experience: <em>the money, the maintenance, and the people.</em></h2>
+    <h2 class="h-disp rv d1">One app for the whole ownership experience<em class="h2-sub">the money, the maintenance, the people</em></h2>
     <div class="pillars">
       <div class="pillar pl-t rv" id="pl1">
         <span class="no">01</span>
