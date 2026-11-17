@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { DM_Mono, Outfit, Saira_Extra_Condensed } from "next/font/google";
 import "./globals.css";
+import VisitBeacon from "../components/VisitBeacon";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -58,7 +59,10 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <VisitBeacon />
+      </body>
     </html>
   );
 }

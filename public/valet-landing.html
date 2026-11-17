@@ -2298,5 +2298,22 @@ openJoin=function(k){
   _openJoin(k);
 };
 </script>
+<script>
+/* Visit counting: one anonymous page view per load, posted to the Valet server. Sends the path,
+   a sign-up code and utm tags from the URL, and the referrer's host. No cookies, nothing stored
+   in the browser, never from localhost or a preview. Same rules as lib/visitBeacon.ts. */
+setTimeout(function(){try{
+  var l=window.location,h=l.hostname.toLowerCase();
+  if(l.protocol!=='https:'||(h!=='valet.app'&&h!=='www.valet.app'))return;
+  var q=new URLSearchParams(l.search),p=l.pathname==='/valet-landing.html'?'/':(l.pathname||'/');
+  var b={site:'website',path:p};
+  if(q.get('code'))b.code=q.get('code').slice(0,40);
+  ['utm_source','utm_medium','utm_campaign'].forEach(function(k){if(q.get(k))b[k]=q.get(k).slice(0,100);});
+  var r='';try{r=document.referrer?new URL(document.referrer).hostname.toLowerCase():'';}catch(e){}
+  if(r&&r!=='valet.app'&&r!=='www.valet.app')b.referrer_host=r;
+  var f=fetch('https://platform.valet.app/api/visit',{method:'POST',body:JSON.stringify(b),headers:{'Content-Type':'text/plain'},keepalive:true,credentials:'omit',mode:'no-cors'});
+  if(f&&f.catch)f.catch(function(){});
+}catch(e){}},300);
+</script>
 </body>
 </html>
