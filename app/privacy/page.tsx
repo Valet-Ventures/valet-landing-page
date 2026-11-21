@@ -110,8 +110,9 @@ export default function PrivacyPolicyPage() {
           </p>
           <p>
             Our homepage also uses the Meta Pixel, an advertising cookie from Meta (Facebook and
-            Instagram). It tells Meta that a browser visited the page or signed up, so we can measure our
-            ads and show them to people likely to care. We never send Meta your email. You can turn off
+            Instagram). It tells Meta that a browser visited the page or signed up, and, when you create
+            an account on the web, that a new account was made (nothing else you do in Valet), so we can
+            measure our ads and show them to people likely to care. The iPhone app does not use it. We never send Meta your email. You can turn off
             ad personalization in your Meta ad settings, or block third-party cookies in your browser.
           </p>
         </section>
