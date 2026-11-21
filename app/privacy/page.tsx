@@ -21,7 +21,7 @@ export default function PrivacyPolicyPage() {
       <main className="privacy-main">
         <h1 className="privacy-h1-deck">Privacy Policy</h1>
         <p className="privacy-meta-line">
-          Effective · May 3, 2026 · Valet
+          Effective · May 3, 2026 · Updated November 21, 2026 · Valet
         </p>
 
         <section className="privacy-section" aria-labelledby="privacy-collect">
@@ -107,6 +107,12 @@ export default function PrivacyPolicyPage() {
             reduce abuse, preference helpers such as theme or recent activity, and lightweight analytics
             for anonymous usage patterns. You can limit cookies in your browser; turning off essentials may
             break sign-in or core features.
+          </p>
+          <p>
+            Our homepage also uses the Meta Pixel, an advertising cookie from Meta (Facebook and
+            Instagram). It tells Meta that a browser visited the page or signed up, so we can measure our
+            ads and show them to people likely to care. We never send Meta your email. You can turn off
+            ad personalization in your Meta ad settings, or block third-party cookies in your browser.
           </p>
         </section>
 

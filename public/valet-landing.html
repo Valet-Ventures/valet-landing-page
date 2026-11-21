@@ -8,6 +8,22 @@
 <meta name="theme-color" content="#1e332b" />
 <!-- Meta (Facebook) domain verification, for the ads (Johnny, 21 Nov). Must stay in the static <head>. -->
 <meta name="facebook-domain-verification" content="w19a8eexbgpj96blm2q04yvsr6v91r" />
+<!-- Meta Pixel (Johnny's ads, 21 Nov): page views, plus a Lead when a sign-up form succeeds (below).
+     No advanced matching: the email is never sent to Meta. -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window,document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1168871208812238');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=1168871208812238&ev=PageView&noscript=1"/></noscript>
+<!-- End Meta Pixel Code -->
 <!-- Served at `/` via a rewrite (netlify.toml); canonical keeps the raw .html path out of search results. -->
 <link rel="canonical" href="/" />
 <link rel="icon" href="/icon.svg" type="image/svg+xml" sizes="any" />
@@ -1245,6 +1261,8 @@ document.querySelectorAll('.cta-form').forEach(function(f){f.addEventListener('s
     });
     var data=await res.json().catch(function(){return {};});
     if(!res.ok)throw new Error(data&&data.error?data.error:"Something went wrong. Please try again.");
+    // Meta Pixel: a sign-up is the ads' conversion. Which form, never the email.
+    try{if(window.fbq)fbq('track','Lead',{content_name:f.dataset.source||'landing'});}catch(_){}
 
     if(okBox&&f.dataset.source==='founding-member'){
       var n=data.foundingMemberNumber;
