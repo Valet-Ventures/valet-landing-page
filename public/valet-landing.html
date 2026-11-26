@@ -953,7 +953,7 @@ footer .logo{font-size:26px;}
   <div class="nav-in">
     <a class="logo" href="#top" aria-label="Valet home"><svg class="lgo" viewBox="3.2 3.8 220.3 64.3" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Valet"><polygon fill="#AE8935" fill-opacity="0.29" points="21.63,4.83 25.70,4.83 8.31,67.12 4.24,67.12"/><polygon fill="#AE8935" fill-opacity="0.45" points="29.70,4.83 35.52,4.83 18.13,67.12 12.31,67.12"/><polygon fill="#AE8935" fill-opacity="0.66" points="39.39,4.83 48.69,4.83 31.30,67.12 22.00,67.12"/><polygon fill="#AE8935" points="52.96,4.83 63.50,4.83 49.71,59.22 75.32,4.83 88.31,4.83 57.00,67.12 35.57,67.12"/><path fill="currentColor" fill-rule="evenodd" d="M101.38 68.15 L88.69 67.88 L91.79 55.24 L81.12 55.73 L76.02 66.25 L74.50 68.01 L62.05 68.24 L69.05 53.62 L91.14 11.12 L95.39 3.99 L115.06 4.04 L114.77 7.25 L102.75 65.86Z M106.02 68.22 L129.24 4.01 L142.37 4.07 L141.09 8.25 L123.50 56.41 L135.67 56.41 L132.85 65.50 L131.40 68.13Z M135.34 68.22 L158.50 4.81 L160.62 4.02 L185.69 4.16 L181.29 15.25 L168.24 15.65 L166.80 18.25 L162.77 30.09 L174.30 30.10 L170.37 41.56 L158.88 41.85 L155.74 48.62 L153.08 56.23 L166.42 56.68 L162.72 68.13Z M188.38 68.14 L175.99 68.22 L194.89 15.94 L185.15 15.83 L189.17 4.13 L191.62 4.01 L222.58 4.21 L218.12 15.43 L208.27 15.89 L190.28 66.00Z M94.39 44.25 L99.47 23.12 L100.19 16.15 L86.78 44.26Z"/></svg></a>
     <div class="nav-links">
-      <a href="#join" onclick="openJoin('m');return false;">Access</a>
+      <a class="join-link" href="https://platform.valet.app/auth?mode=signup">Join</a>
       <a href="#about" onclick="aboutOpen();return false;">About</a>
     </div>
   </div>
@@ -1008,7 +1008,7 @@ footer .logo{font-size:26px;}
     <div class="sp-head"><h3>A real-time pulse on your whole market.</h3></div>
     <div class="sp-line" aria-hidden="true"><div class="livery"><i></i><i></i><i></i></div></div>
     <div class="sp-num" aria-hidden="true"><b>30</b></div>
-    <p class="sp-cap">percent more accurate than KBB and Hagerty</p>
+    <p class="sp-cap">percent more accurate than KBB and the price guides</p>
     <div class="sp-body">
       <p class="sp-lead">Valet watches the market for the cars you own, the cars you want, and the cars you have sold. You know when to sell, when to buy, and whether letting one go was the right call or a reason to buy it back.</p>
       <table class="classif">
@@ -1017,7 +1017,7 @@ footer .logo{font-size:26px;}
         <tbody>
           <tr class="lead"><td class="p">1</td><td>Valet</td><td class="g">Leader</td></tr>
           <tr><td class="p">2</td><td>Leading LLMs</td><td class="g">10%+ behind</td></tr>
-          <tr><td class="p">3</td><td>KBB and Hagerty</td><td class="g">30%+ behind</td></tr>
+          <tr><td class="p">3</td><td>KBB and price guides</td><td class="g">30%+ behind</td></tr>
         </tbody>
       </table>
     </div>
@@ -1111,14 +1111,8 @@ footer .logo{font-size:26px;}
       <div class="cta-row" id="ctaM">
         <span class="cta-tag">Free for founding members</span>
         <h3>Accepting founding VIP members</h3>
-        <p class="cta-p">Enter your email to claim your founding member number and go straight into Valet to create your account. We’ll email your number with a link to the iPhone app. No card, no dues for founders.</p>
-        <form class="wait-form cta-form" data-ok="okM" data-source="founding-member">
-          <div class="hp" aria-hidden="true"><label>Company website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label></div>
-          <input type="email" name="email" required placeholder="your@email.com" aria-label="Email to become a founding member" />
-          <button class="btn" type="submit">Claim my founding number</button>
-        </form>
-        <div class="cta-ok" id="okM">You’re in. Taking you to Valet…</div>
-        <div class="cta-err" role="alert"></div>
+        <p class="cta-p">Create your account and go straight into Valet. Your founding membership is free: no card, no dues for founders.</p>
+        <div class="wait-form"><a class="btn join-link" href="https://platform.valet.app/auth?mode=signup">Join Valet</a></div>
       </div>
       <div class="cta-row" id="ctaE">
         <span class="cta-tag">Limited allocation</span>
@@ -1201,7 +1195,7 @@ footer .logo{font-size:26px;}
     <div class="ab-band-in">
       <p class="ab-quote">Our obsession with the cars. <span class="gold">Fluency in them as assets.</span> A proven record scaling technology companies. <span class="gold">This is where it all harmonizes.</span></p>
       <div class="ab-cta">
-        <a href="#join" class="btn" onclick="aboutClose();openJoin('m');return false;">Founding VIP Members · Free</a>
+        <a class="btn join-link" href="https://platform.valet.app/auth?mode=signup">Founding VIP Members · Free</a>
         <a href="#join" class="btn ghost" onclick="aboutClose();openJoin('e');return false;">Select Equity Partners</a>
       </div>
     </div>
@@ -1213,7 +1207,7 @@ footer .logo{font-size:26px;}
     <span class="logo"><svg class="lgo" viewBox="3.2 3.8 220.3 64.3" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Valet"><polygon fill="#AE8935" fill-opacity="0.29" points="21.63,4.83 25.70,4.83 8.31,67.12 4.24,67.12"/><polygon fill="#AE8935" fill-opacity="0.45" points="29.70,4.83 35.52,4.83 18.13,67.12 12.31,67.12"/><polygon fill="#AE8935" fill-opacity="0.66" points="39.39,4.83 48.69,4.83 31.30,67.12 22.00,67.12"/><polygon fill="#AE8935" points="52.96,4.83 63.50,4.83 49.71,59.22 75.32,4.83 88.31,4.83 57.00,67.12 35.57,67.12"/><path fill="currentColor" fill-rule="evenodd" d="M101.38 68.15 L88.69 67.88 L91.79 55.24 L81.12 55.73 L76.02 66.25 L74.50 68.01 L62.05 68.24 L69.05 53.62 L91.14 11.12 L95.39 3.99 L115.06 4.04 L114.77 7.25 L102.75 65.86Z M106.02 68.22 L129.24 4.01 L142.37 4.07 L141.09 8.25 L123.50 56.41 L135.67 56.41 L132.85 65.50 L131.40 68.13Z M135.34 68.22 L158.50 4.81 L160.62 4.02 L185.69 4.16 L181.29 15.25 L168.24 15.65 L166.80 18.25 L162.77 30.09 L174.30 30.10 L170.37 41.56 L158.88 41.85 L155.74 48.62 L153.08 56.23 L166.42 56.68 L162.72 68.13Z M188.38 68.14 L175.99 68.22 L194.89 15.94 L185.15 15.83 L189.17 4.13 L191.62 4.01 L222.58 4.21 L218.12 15.43 L208.27 15.89 L190.28 66.00Z M94.39 44.25 L99.47 23.12 L100.19 16.15 L86.78 44.26Z"/></svg></span>
     <div class="copy">© 2026 Valet Ventures Inc. Los Angeles. Drive more, stress less.</div>
     <div class="foot-links">
-      <a href="/privacy">Privacy</a><a href="mailto:johnny@valet.app">Contact</a>
+      <a class="join-link" href="https://platform.valet.app/auth?mode=signup">Join</a><a href="/privacy">Privacy</a><a href="mailto:johnny@valet.app">Contact</a>
     </div>
   </div>
 </footer>
@@ -1222,13 +1216,21 @@ footer .logo{font-size:26px;}
 /* CTA folds + About page */
 function ctaOpenOnly(k){const m=document.getElementById('ctaM'),e=document.getElementById('ctaE');
   m.classList.remove('open');e.classList.remove('open');const t=k==='m'?m:e;t.classList.add('open');
-  const inp=t.querySelector('input');if(inp)inp.focus({preventScroll:true});
+  const inp=t.querySelector('input,.join-link');if(inp)inp.focus({preventScroll:true});
   setTimeout(()=>t.classList.remove('open'),2600);}
 function ctaToggle(k){ctaOpenOnly(k);}
 function openJoin(k){document.getElementById('join').scrollIntoView({behavior:'smooth'});setTimeout(()=>ctaOpenOnly(k),650);}
 /* Waitlist capture -> POST /api/waitlist. `data-source` tags which CTA the signup came from;
    the route allowlists the value before it reaches the database. The founding member CTA gets
    a sequential number back and goes straight into the web app. */
+/* Join (Johnny 10): every Join link goes straight to sign-up in the app. Ad and campaign tags
+   (utm_*, fbclid) ride along so the app can tell where a new member came from. */
+(function(){var q=new URLSearchParams(location.search),keep=new URLSearchParams();
+  q.forEach(function(v,k){if(/^utm_|^fbclid$/.test(k))keep.set(k,v);});
+  document.querySelectorAll('.join-link').forEach(function(a){
+    if(keep.toString())a.href=a.href+'&'+keep.toString();
+    a.addEventListener('click',function(){try{if(window.fbq)fbq('track','Lead',{content_name:'join'});}catch(_){}});
+  });})();
 var EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@.]+$/;
 var APP_ORIGIN="https://platform.valet.app";
 document.querySelectorAll('.cta-form').forEach(function(f){f.addEventListener('submit',async function(ev){ev.preventDefault();
